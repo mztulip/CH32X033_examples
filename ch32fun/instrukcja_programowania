@@ -1,0 +1,7 @@
+D+ podciagnąc do Vcc przy zasilaniu co uruchomi bootloader USB
+
+[ 1019.574480] usb 1-6: new full-speed USB device number 6 using xhci_hcd
+[ 1019.698099] usb 1-6: New USB device found, idVendor=1a86, idProduct=55e0, bcdDevice=26.00
+[ 1019.698106] usb 1-6: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+
+sudo python chprog.py blink.bin

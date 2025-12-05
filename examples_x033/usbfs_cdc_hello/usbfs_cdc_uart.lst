@@ -1,0 +1,2442 @@
+
+usbfs_cdc_uart.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .init:
+
+00000000 <InterruptVector>:
+	void InterruptVector()         __attribute__((naked)) __attribute((section(".init"))) __attribute((weak,alias("InterruptVectorDefault"))) __attribute((naked));
+	void InterruptVectorDefault()  __attribute__((naked)) __attribute((section(".init"))) __attribute((naked));
+	void InterruptVectorDefault( void )
+	{
+		#if !defined(FUNCONF_TINYVECTOR) || !FUNCONF_TINYVECTOR
+			asm volatile( DEFAULT_INTERRUPT_VECTOR_CONTENTS );
+   0:	4780006f          	j	478 <handle_reset>
+   4:	00000000          	.word	0x00000000
+   8:	0000053e          	.word	0x0000053e
+   c:	000004f2          	.word	0x000004f2
+  10:	00000000          	.word	0x00000000
+  14:	000004f2          	.word	0x000004f2
+	...
+  20:	000004f2          	.word	0x000004f2
+  24:	000004f2          	.word	0x000004f2
+	...
+  30:	000011e8          	.word	0x000011e8
+  34:	00000000          	.word	0x00000000
+  38:	000004f2          	.word	0x000004f2
+  3c:	00000000          	.word	0x00000000
+  40:	000004f2          	.word	0x000004f2
+  44:	000004f2          	.word	0x000004f2
+  48:	000004f2          	.word	0x000004f2
+  4c:	000004f2          	.word	0x000004f2
+  50:	000004f2          	.word	0x000004f2
+  54:	000004f2          	.word	0x000004f2
+  58:	000004f2          	.word	0x000004f2
+  5c:	000004f2          	.word	0x000004f2
+  60:	000004f2          	.word	0x000004f2
+  64:	000004f2          	.word	0x000004f2
+  68:	000004f2          	.word	0x000004f2
+  6c:	000004f2          	.word	0x000004f2
+  70:	000004f2          	.word	0x000004f2
+  74:	000004f2          	.word	0x000004f2
+  78:	000004f2          	.word	0x000004f2
+  7c:	000004f2          	.word	0x000004f2
+  80:	000004f2          	.word	0x000004f2
+  84:	000004f2          	.word	0x000004f2
+  88:	000004f2          	.word	0x000004f2
+  8c:	000004f2          	.word	0x000004f2
+  90:	000004f2          	.word	0x000004f2
+  94:	000004f2          	.word	0x000004f2
+  98:	000004f2          	.word	0x000004f2
+  9c:	000004f2          	.word	0x000004f2
+  a0:	000004f2          	.word	0x000004f2
+  a4:	000004f2          	.word	0x000004f2
+  a8:	000004f2          	.word	0x000004f2
+  ac:	000004f2          	.word	0x000004f2
+  b0:	000004f2          	.word	0x000004f2
+  b4:	0000054c          	.word	0x0000054c
+  b8:	000004f2          	.word	0x000004f2
+  bc:	000004f2          	.word	0x000004f2
+  c0:	000004f2          	.word	0x000004f2
+  c4:	000004f2          	.word	0x000004f2
+  c8:	000004f2          	.word	0x000004f2
+  cc:	000004f2          	.word	0x000004f2
+  d0:	000004f2          	.word	0x000004f2
+  d4:	000004f2          	.word	0x000004f2
+  d8:	000004f2          	.word	0x000004f2
+  dc:	0000                	.insn	2, 0x
+	...
+
+Disassembly of section .text:
+
+000000e0 <mini_pad>:
+	if(pad_to == 0) pad_to = len;
+      e0:	c699                	beqz	a3,ee <mini_pad+0xe>
+	int overflow = 0;
+      e2:	4801                	li	a6,0
+	if(len > pad_to) {
+      e4:	00b6d763          	bge	a3,a1,f2 <mini_pad+0x12>
+		len = pad_to;
+      e8:	85b6                	mv	a1,a3
+		overflow = 1;
+      ea:	4805                	li	a6,1
+      ec:	a019                	j	f2 <mini_pad+0x12>
+	int overflow = 0;
+      ee:	4801                	li	a6,0
+	if(pad_to == 0) pad_to = len;
+      f0:	86ae                	mv	a3,a1
+	for(i = pad_to - len; i > 0; i --) {
+      f2:	8e8d                	sub	a3,a3,a1
+	char * pbuffer = buffer;
+      f4:	87ba                	mv	a5,a4
+      f6:	00e68333          	add	t1,a3,a4
+	for(i = pad_to - len; i > 0; i --) {
+      fa:	40f308b3          	sub	a7,t1,a5
+      fe:	05104a63          	bgtz	a7,152 <mini_pad+0x72>
+     102:	fff6c793          	not	a5,a3
+     106:	87fd                	srai	a5,a5,0x1f
+     108:	8efd                	and	a3,a3,a5
+     10a:	96ba                	add	a3,a3,a4
+     10c:	4781                	li	a5,0
+	for(i = len; i > 0; i --) {
+     10e:	40f58633          	sub	a2,a1,a5
+     112:	00f688b3          	add	a7,a3,a5
+     116:	04c04263          	bgtz	a2,15a <mini_pad+0x7a>
+     11a:	fff5c793          	not	a5,a1
+     11e:	87fd                	srai	a5,a5,0x1f
+     120:	8dfd                	and	a1,a1,a5
+     122:	95b6                	add	a1,a1,a3
+	len = pbuffer - buffer;
+     124:	40e58533          	sub	a0,a1,a4
+	if(overflow) {
+     128:	02080463          	beqz	a6,150 <mini_pad+0x70>
+		for (i = 0; i < 3 && pbuffer > buffer; i ++) {
+     12c:	02b77263          	bgeu	a4,a1,150 <mini_pad+0x70>
+			*(pbuffer-- - 1) = '*';
+     130:	02a00793          	li	a5,42
+     134:	fef58fa3          	sb	a5,-1(a1)
+     138:	fff58693          	addi	a3,a1,-1
+		for (i = 0; i < 3 && pbuffer > buffer; i ++) {
+     13c:	00d77a63          	bgeu	a4,a3,150 <mini_pad+0x70>
+			*(pbuffer-- - 1) = '*';
+     140:	fef58f23          	sb	a5,-2(a1)
+     144:	ffe58693          	addi	a3,a1,-2
+		for (i = 0; i < 3 && pbuffer > buffer; i ++) {
+     148:	00d77463          	bgeu	a4,a3,150 <mini_pad+0x70>
+			*(pbuffer-- - 1) = '*';
+     14c:	fef58ea3          	sb	a5,-3(a1)
+}
+     150:	8082                	ret
+		*(pbuffer++) = pad_char;
+     152:	0785                	addi	a5,a5,1
+     154:	fec78fa3          	sb	a2,-1(a5)
+	for(i = pad_to - len; i > 0; i --) {
+     158:	b74d                	j	fa <mini_pad+0x1a>
+		*(pbuffer++) = *(ptr++);
+     15a:	00f50633          	add	a2,a0,a5
+     15e:	00064603          	lbu	a2,0(a2)
+     162:	0785                	addi	a5,a5,1
+     164:	00c88023          	sb	a2,0(a7)
+	for(i = len; i > 0; i --) {
+     168:	b75d                	j	10e <mini_pad+0x2e>
+
+0000016a <_puts>:
+{
+     16a:	86aa                	mv	a3,a0
+     16c:	852e                	mv	a0,a1
+	if(!buf) return len;
+     16e:	ce01                	beqz	a2,186 <_puts+0x1c>
+	char * p0 = b->buffer;
+     170:	00062883          	lw	a7,0(a2)
+	for (i = 0; i < len; i++) {
+     174:	4701                	li	a4,0
+		if(b->pbuffer == b->buffer + b->buffer_len - 1) {
+     176:	425c                	lw	a5,4(a2)
+	for (i = 0; i < len; i++) {
+     178:	00a74863          	blt	a4,a0,188 <_puts+0x1e>
+	*(b->pbuffer) = 0;
+     17c:	00078023          	sb	zero,0(a5)
+	return b->pbuffer - p0;
+     180:	4248                	lw	a0,4(a2)
+     182:	41150533          	sub	a0,a0,a7
+}
+     186:	8082                	ret
+		if(b->pbuffer == b->buffer + b->buffer_len - 1) {
+     188:	00862803          	lw	a6,8(a2)
+     18c:	420c                	lw	a1,0(a2)
+     18e:	187d                	addi	a6,a6,-1
+     190:	95c2                	add	a1,a1,a6
+     192:	feb785e3          	beq	a5,a1,17c <_puts+0x12>
+		*(b->pbuffer ++) = s[i];
+     196:	00178593          	addi	a1,a5,1
+     19a:	c24c                	sw	a1,4(a2)
+     19c:	00e685b3          	add	a1,a3,a4
+     1a0:	0005c583          	lbu	a1,0(a1)
+	for (i = 0; i < len; i++) {
+     1a4:	0705                	addi	a4,a4,1
+		*(b->pbuffer ++) = s[i];
+     1a6:	00b78023          	sb	a1,0(a5)
+	for (i = 0; i < len; i++) {
+     1aa:	b7f1                	j	176 <_puts+0xc>
+
+000001ac <PrintHex>:
+	while( (*DMDATA0) & 0x80 );
+     1ac:	e00007b7          	lui	a5,0xe0000
+     1b0:	38078793          	addi	a5,a5,896 # e0000380 <_eusrstack+0xbfffb380>
+     1b4:	4398                	lw	a4,0(a5)
+     1b6:	08077713          	andi	a4,a4,128
+     1ba:	ff6d                	bnez	a4,1b4 <PrintHex+0x8>
+	*DMDATA0 = 0x78302088; //" 0x"
+     1bc:	78302737          	lui	a4,0x78302
+     1c0:	08870713          	addi	a4,a4,136 # 78302088 <_eusrstack+0x582fd088>
+		while( (*DMDATA0) & 0x80 );
+     1c4:	e00006b7          	lui	a3,0xe0000
+	*DMDATA0 = 0x78302088; //" 0x"
+     1c8:	c398                	sw	a4,0(a5)
+		while( (*DMDATA0) & 0x80 );
+     1ca:	38068693          	addi	a3,a3,896 # e0000380 <_eusrstack+0xbfffb380>
+	for( shift = 28; shift >= 0; shift -= 4 )
+     1ce:	4771                	li	a4,28
+		s += ( s < 10 ) ? '0' : ('a' - 10);
+     1d0:	4825                	li	a6,9
+	for( shift = 28; shift >= 0; shift -= 4 )
+     1d2:	55f1                	li	a1,-4
+		while( (*DMDATA0) & 0x80 );
+     1d4:	429c                	lw	a5,0(a3)
+     1d6:	0807f793          	andi	a5,a5,128
+     1da:	ffed                	bnez	a5,1d4 <PrintHex+0x28>
+		int s = (n>>shift) & 0xf;
+     1dc:	00e55633          	srl	a2,a0,a4
+     1e0:	8a3d                	andi	a2,a2,15
+		s += ( s < 10 ) ? '0' : ('a' - 10);
+     1e2:	00c837b3          	sltu	a5,a6,a2
+     1e6:	40f007b3          	neg	a5,a5
+     1ea:	0277f793          	andi	a5,a5,39
+     1ee:	03078793          	addi	a5,a5,48
+     1f2:	97b2                	add	a5,a5,a2
+		*DMDATA0 = 0x85 | (s<<8); //" 0x"
+     1f4:	07a2                	slli	a5,a5,0x8
+     1f6:	0857e793          	ori	a5,a5,133
+     1fa:	c29c                	sw	a5,0(a3)
+	for( shift = 28; shift >= 0; shift -= 4 )
+     1fc:	1771                	addi	a4,a4,-4
+     1fe:	fcb71be3          	bne	a4,a1,1d4 <PrintHex+0x28>
+}
+     202:	8082                	ret
+
+00000204 <mini_itoa.part.0>:
+	int	negative = 0;
+     204:	4881                	li	a7,0
+	if (value < 0 && !unsig) {
+     206:	00055663          	bgez	a0,212 <mini_itoa.part.0+0xe>
+     20a:	e681                	bnez	a3,212 <mini_itoa.part.0+0xe>
+		value = -value;
+     20c:	40a00533          	neg	a0,a0
+		negative = 1;
+     210:	4885                	li	a7,1
+     212:	8a05                	andi	a2,a2,1
+     214:	06100793          	li	a5,97
+     218:	c219                	beqz	a2,21e <mini_itoa.part.0+0x1a>
+     21a:	04100793          	li	a5,65
+	int	negative = 0;
+     21e:	883a                	mv	a6,a4
+		*(pbuffer++) = (digit < 10 ? '0' + digit : (uppercase ? 'A' : 'a') + digit - 10);
+     220:	4e25                	li	t3,9
+     222:	ff678613          	addi	a2,a5,-10
+		int digit = value % radix;
+     226:	02b577b3          	remu	a5,a0,a1
+     22a:	832a                	mv	t1,a0
+		*(pbuffer++) = (digit < 10 ? '0' + digit : (uppercase ? 'A' : 'a') + digit - 10);
+     22c:	0ff7f693          	zext.b	a3,a5
+     230:	04fe6463          	bltu	t3,a5,278 <mini_itoa.part.0+0x74>
+     234:	03068693          	addi	a3,a3,48
+     238:	0ff6f693          	zext.b	a3,a3
+     23c:	00d80023          	sb	a3,0(a6)
+     240:	00180793          	addi	a5,a6,1
+		value /= radix;
+     244:	02b55533          	divu	a0,a0,a1
+	} while (value > 0);
+     248:	02b37663          	bgeu	t1,a1,274 <mini_itoa.part.0+0x70>
+	if (negative)
+     24c:	00088863          	beqz	a7,25c <mini_itoa.part.0+0x58>
+		*(pbuffer++) = '-';
+     250:	02d00693          	li	a3,45
+     254:	00d78023          	sb	a3,0(a5)
+     258:	00280793          	addi	a5,a6,2
+	len = (pbuffer - buffer);
+     25c:	40e78533          	sub	a0,a5,a4
+	for (i = 0; i < len / 2; i++) {
+     260:	4609                	li	a2,2
+	*(pbuffer) = '\0';
+     262:	00078023          	sb	zero,0(a5)
+	for (i = 0; i < len / 2; i++) {
+     266:	4681                	li	a3,0
+     268:	02c54633          	div	a2,a0,a2
+     26c:	17fd                	addi	a5,a5,-1
+     26e:	00c6c763          	blt	a3,a2,27c <mini_itoa.part.0+0x78>
+}
+     272:	8082                	ret
+		*(pbuffer++) = (digit < 10 ? '0' + digit : (uppercase ? 'A' : 'a') + digit - 10);
+     274:	883e                	mv	a6,a5
+     276:	bf45                	j	226 <mini_itoa.part.0+0x22>
+     278:	96b2                	add	a3,a3,a2
+     27a:	bf7d                	j	238 <mini_itoa.part.0+0x34>
+		char j = buffer[i];
+     27c:	00d705b3          	add	a1,a4,a3
+		buffer[i] = buffer[len-i-1];
+     280:	0007c883          	lbu	a7,0(a5)
+		char j = buffer[i];
+     284:	0005c803          	lbu	a6,0(a1)
+	for (i = 0; i < len / 2; i++) {
+     288:	0685                	addi	a3,a3,1
+		buffer[i] = buffer[len-i-1];
+     28a:	01158023          	sb	a7,0(a1)
+		buffer[len-i-1] = j;
+     28e:	01078023          	sb	a6,0(a5)
+	for (i = 0; i < len / 2; i++) {
+     292:	bfe9                	j	26c <mini_itoa.part.0+0x68>
+
+00000294 <USBFS_InternalFinishSetup>:
+
+void USBFS_InternalFinishSetup()
+{
+
+#if FUSB_EP1_MODE
+	USBFSCTX.endpoint_mode[1] = FUSB_EP1_MODE;
+     294:	200017b7          	lui	a5,0x20001
+     298:	c4478613          	addi	a2,a5,-956 # 20000c44 <USBFSCTX>
+     29c:	10060693          	addi	a3,a2,256
+     2a0:	4585                	li	a1,1
+     2a2:	cacc                	sw	a1,20(a3)
+#if FUSB_EP1_MODE > 0 
+	USBFS->UEP4_1_MOD = USBFS_UEP1_TX_EN;
+     2a4:	40023737          	lui	a4,0x40023
+     2a8:	04000513          	li	a0,64
+     2ac:	40a70623          	sb	a0,1036(a4) # 4002340c <_eusrstack+0x2001e40c>
+	USBFS->UEP4_1_MOD |= USBFS_UEP4_RX_EN;
+#endif
+#endif
+
+#if FUSB_EP2_MODE
+	USBFSCTX.endpoint_mode[2] = FUSB_EP2_MODE;
+     2b0:	557d                	li	a0,-1
+     2b2:	ce88                	sw	a0,24(a3)
+#if FUSB_EP2_MODE > 0 
+	USBFS->UEP2_3_MOD = USBFS_UEP2_TX_EN;
+#else
+	USBFS->UEP2_3_MOD = USBFS_UEP2_RX_EN;
+     2b4:	4521                	li	a0,8
+     2b6:	40a706a3          	sb	a0,1037(a4)
+#endif
+#endif
+#if FUSB_EP3_MODE
+	USBFSCTX.endpoint_mode[3] = FUSB_EP3_MODE;
+     2ba:	cecc                	sw	a1,28(a3)
+#if FUSB_EP3_MODE > 0 
+	USBFS->UEP2_3_MOD |= USBFS_UEP3_TX_EN;
+     2bc:	40d74683          	lbu	a3,1037(a4)
+     2c0:	c4478793          	addi	a5,a5,-956
+     2c4:	0406e693          	ori	a3,a3,64
+     2c8:	40d706a3          	sb	a3,1037(a4)
+#error You must have at least EP0!
+#endif
+
+	for( int i = 0; i < FUSB_CONFIG_EPS; i++ )
+	{
+		UEP_DMA(i) = (uintptr_t)USBFSCTX.ENDPOINTS[i];
+     2cc:	20001737          	lui	a4,0x20001
+     2d0:	400236b7          	lui	a3,0x40023
+     2d4:	c5470713          	addi	a4,a4,-940 # 20000c54 <USBFSCTX+0x10>
+     2d8:	40e6a823          	sw	a4,1040(a3) # 40023410 <_eusrstack+0x2001e410>
+     2dc:	20001737          	lui	a4,0x20001
+     2e0:	c9470713          	addi	a4,a4,-876 # 20000c94 <USBFSCTX+0x50>
+     2e4:	40e6aa23          	sw	a4,1044(a3)
+     2e8:	20001737          	lui	a4,0x20001
+     2ec:	cd470713          	addi	a4,a4,-812 # 20000cd4 <USBFSCTX+0x90>
+     2f0:	40e6ac23          	sw	a4,1048(a3)
+     2f4:	20001737          	lui	a4,0x20001
+     2f8:	d1470713          	addi	a4,a4,-748 # 20000d14 <USBFSCTX+0xd0>
+     2fc:	40e6ae23          	sw	a4,1052(a3)
+	}
+	
+#if defined (CH5xx) || defined (CH32X03x) || defined (CH32V10x)
+	UEP_CTRL_TX(0) = USBFS_UEP_T_RES_NAK | USBFS_UEP_R_RES_ACK | CHECK_USBFS_UEP_T_AUTO_TOG;
+     300:	8736                	mv	a4,a3
+     302:	46c9                	li	a3,18
+     304:	42d71123          	sh	a3,1058(a4)
+
+	for( int i = 1; i < FUSB_CONFIG_EPS; i++ )
+	{
+		if( USBFSCTX.endpoint_mode[i] > 0 )
+		{
+			UEP_CTRL_TX(i) = USBFS_UEP_T_RES_NAK;
+     308:	4689                	li	a3,2
+     30a:	42d71323          	sh	a3,1062(a4)
+			UEP_CTRL_TX(i) = USBFS_UEP_R_RES_ACK;
+#else
+			UEP_CTRL_RX(i) = USBFS_UEP_R_RES_ACK;
+#endif
+		}
+		USBFSCTX.USBFS_Endp_Busy[i] = 0;
+     30e:	120602a3          	sb	zero,293(a2)
+			UEP_CTRL_TX(i) = USBFS_UEP_R_RES_ACK;
+     312:	42071523          	sh	zero,1066(a4)
+		if( USBFSCTX.endpoint_mode[i] > 0 )
+     316:	11c7a703          	lw	a4,284(a5)
+		USBFSCTX.USBFS_Endp_Busy[i] = 0;
+     31a:	12078323          	sb	zero,294(a5)
+		if( USBFSCTX.endpoint_mode[i] > 0 )
+     31e:	00e05963          	blez	a4,330 <USBFS_InternalFinishSetup+0x9c>
+			UEP_CTRL_TX(i) = USBFS_UEP_T_RES_NAK;
+     322:	40023737          	lui	a4,0x40023
+     326:	42d71723          	sh	a3,1070(a4) # 4002342e <_eusrstack+0x2001e42e>
+		USBFSCTX.USBFS_Endp_Busy[i] = 0;
+     32a:	120783a3          	sb	zero,295(a5)
+	}
+}
+     32e:	8082                	ret
+		else if( USBFSCTX.endpoint_mode[i] < 0 )
+     330:	df6d                	beqz	a4,32a <USBFS_InternalFinishSetup+0x96>
+			UEP_CTRL_TX(i) = USBFS_UEP_R_RES_ACK;
+     332:	40023737          	lui	a4,0x40023
+     336:	42071723          	sh	zero,1070(a4) # 4002342e <_eusrstack+0x2001e42e>
+     33a:	bfc5                	j	32a <USBFS_InternalFinishSetup+0x96>
+
+0000033c <DelaySysTick.constprop.0>:
+{
+#if defined(CH32V003) || defined(CH32V00x)
+	uint32_t targend = SysTick->CNT + n;
+	while( ((int32_t)( SysTick->CNT - targend )) < 0 );
+#elif defined(CH32V20x) || defined(CH32V30x) || defined(CH32X03x) || defined(CH32L103) || defined(CH582_CH583) || defined(CH591_CH592)
+	uint64_t targend = SysTick->CNT + n;
+     33c:	e000f837          	lui	a6,0xe000f
+     340:	00882703          	lw	a4,8(a6) # e000f008 <_eusrstack+0xc000a008>
+     344:	00c82783          	lw	a5,12(a6)
+     348:	1e070613          	addi	a2,a4,480
+     34c:	00e636b3          	sltu	a3,a2,a4
+     350:	96be                	add	a3,a3,a5
+	while( ((int64_t)( SysTick->CNT - targend )) < 0 );
+     352:	00882503          	lw	a0,8(a6)
+     356:	00c82583          	lw	a1,12(a6)
+     35a:	40c50733          	sub	a4,a0,a2
+     35e:	00e53733          	sltu	a4,a0,a4
+     362:	40d587b3          	sub	a5,a1,a3
+     366:	8f99                	sub	a5,a5,a4
+     368:	fe07c5e3          	bltz	a5,352 <DelaySysTick.constprop.0+0x16>
+	uint64_t targend = SysTick->CNT - n;
+	while( ((int64_t)( SysTick->CNT - targend )) > 0 );
+#else
+	#error DelaySysTick not defined.
+#endif
+}
+     36c:	8082                	ret
+
+0000036e <internal_handle_input.constprop.0>:
+	uint32_t dmd0 = *dmdata0;
+     36e:	e00007b7          	lui	a5,0xe0000
+     372:	3807a783          	lw	a5,896(a5) # e0000380 <_eusrstack+0xbfffb380>
+}
+     376:	8082                	ret
+
+00000378 <_write.constprop.0>:
+WEAK int _write(int fd, const char *buf, int size)
+     378:	7139                	addi	sp,sp,-64
+     37a:	dc22                	sw	s0,56(sp)
+	if( ( *DMDATA0 & 0xc0 ) == 0xc0 ) return 0;
+     37c:	e0000437          	lui	s0,0xe0000
+     380:	38040413          	addi	s0,s0,896 # e0000380 <_eusrstack+0xbfffb380>
+     384:	401c                	lw	a5,0(s0)
+WEAK int _write(int fd, const char *buf, int size)
+     386:	de06                	sw	ra,60(sp)
+     388:	da26                	sw	s1,52(sp)
+     38a:	d84a                	sw	s2,48(sp)
+     38c:	d64e                	sw	s3,44(sp)
+     38e:	d452                	sw	s4,40(sp)
+     390:	d256                	sw	s5,36(sp)
+     392:	d05a                	sw	s6,32(sp)
+     394:	ce5e                	sw	s7,28(sp)
+	if( ( *DMDATA0 & 0xc0 ) == 0xc0 ) return 0;
+     396:	0c07f793          	andi	a5,a5,192
+     39a:	0c000713          	li	a4,192
+     39e:	00e78b63          	beq	a5,a4,3b4 <_write.constprop.0+0x3c>
+	char buffer[4] = { 0 };
+     3a2:	c602                	sw	zero,12(sp)
+     3a4:	84ae                	mv	s1,a1
+	if( size == 0 )
+     3a6:	e5d5                	bnez	a1,452 <_write.constprop.0+0xda>
+		lastdmd = (*DMDATA0);
+     3a8:	401c                	lw	a5,0(s0)
+		if( lastdmd && !(lastdmd&0x80) ) internal_handle_input( (uint32_t*)DMDATA0 );
+     3aa:	c789                	beqz	a5,3b4 <_write.constprop.0+0x3c>
+     3ac:	0807f793          	andi	a5,a5,128
+     3b0:	e391                	bnez	a5,3b4 <_write.constprop.0+0x3c>
+     3b2:	3f75                	jal	36e <internal_handle_input.constprop.0>
+	if( ( *DMDATA0 & 0xc0 ) == 0xc0 ) return 0;
+     3b4:	4481                	li	s1,0
+}
+     3b6:	50f2                	lw	ra,60(sp)
+     3b8:	5462                	lw	s0,56(sp)
+     3ba:	5942                	lw	s2,48(sp)
+     3bc:	59b2                	lw	s3,44(sp)
+     3be:	5a22                	lw	s4,40(sp)
+     3c0:	5a92                	lw	s5,36(sp)
+     3c2:	5b02                	lw	s6,32(sp)
+     3c4:	4bf2                	lw	s7,28(sp)
+     3c6:	8526                	mv	a0,s1
+     3c8:	54d2                	lw	s1,52(sp)
+     3ca:	6121                	addi	sp,sp,64
+     3cc:	8082                	ret
+		int tosend = size - place;
+     3ce:	412489b3          	sub	s3,s1,s2
+		if( tosend > 7 ) tosend = 7;
+     3d2:	013b5363          	bge	s6,s3,3d8 <_write.constprop.0+0x60>
+     3d6:	499d                	li	s3,7
+     3d8:	008007b7          	lui	a5,0x800
+     3dc:	0785                	addi	a5,a5,1 # 800001 <usbfs_cdc_uart.c.5b8701b2+0x7fd790>
+		while( ( lastdmd = (*DMDATA0) ) & 0x80 )
+     3de:	4018                	lw	a4,0(s0)
+     3e0:	08077693          	andi	a3,a4,128
+     3e4:	e6b1                	bnez	a3,430 <_write.constprop.0+0xb8>
+		if( lastdmd ) internal_handle_input( (uint32_t*)DMDATA0 );
+     3e6:	c311                	beqz	a4,3ea <_write.constprop.0+0x72>
+     3e8:	3759                	jal	36e <internal_handle_input.constprop.0>
+     3ea:	0078                	addi	a4,sp,12
+		if( tosend > 7 ) tosend = 7;
+     3ec:	478d                	li	a5,3
+     3ee:	863a                	mv	a2,a4
+		while( t < tosend )
+     3f0:	0537c763          	blt	a5,s3,43e <_write.constprop.0+0xc6>
+		*DMDATA1 = *(uint32_t*)&(buffer[0]);
+     3f4:	47b2                	lw	a5,12(sp)
+     3f6:	012a0733          	add	a4,s4,s2
+     3fa:	00faa023          	sw	a5,0(s5)
+		t = 0;
+     3fe:	4781                	li	a5,0
+			buffer[t+1] = buf[t+place];
+     400:	00074583          	lbu	a1,0(a4)
+     404:	0785                	addi	a5,a5,1
+     406:	00f606b3          	add	a3,a2,a5
+     40a:	00b68023          	sb	a1,0(a3)
+		while( t < tosend && t < 3 )
+     40e:	00f98563          	beq	s3,a5,418 <_write.constprop.0+0xa0>
+     412:	0705                	addi	a4,a4,1
+     414:	ff7796e3          	bne	a5,s7,400 <_write.constprop.0+0x88>
+		buffer[0] = 0x80 | (tosend + 4);
+     418:	00498793          	addi	a5,s3,4
+     41c:	f807e793          	ori	a5,a5,-128
+     420:	00f10623          	sb	a5,12(sp)
+		*DMDATA0 = *(uint32_t*)&(buffer[0]);
+     424:	47b2                	lw	a5,12(sp)
+		place += tosend;
+     426:	994e                	add	s2,s2,s3
+		*DMDATA0 = *(uint32_t*)&(buffer[0]);
+     428:	c01c                	sw	a5,0(s0)
+	while( place < size )
+     42a:	fa9942e3          	blt	s2,s1,3ce <_write.constprop.0+0x56>
+     42e:	b761                	j	3b6 <_write.constprop.0+0x3e>
+			if( timeout-- == 0 )
+     430:	17fd                	addi	a5,a5,-1
+     432:	f7d5                	bnez	a5,3de <_write.constprop.0+0x66>
+				*DMDATA0 |= 0xc0;
+     434:	401c                	lw	a5,0(s0)
+     436:	0c07e793          	ori	a5,a5,192
+     43a:	c01c                	sw	a5,0(s0)
+				return 0;
+     43c:	bfa5                	j	3b4 <_write.constprop.0+0x3c>
+			buffer[t-3] = buf[t+place];
+     43e:	00f906b3          	add	a3,s2,a5
+     442:	96d2                	add	a3,a3,s4
+     444:	0006c683          	lbu	a3,0(a3)
+			t++;
+     448:	0785                	addi	a5,a5,1
+     44a:	0705                	addi	a4,a4,1
+			buffer[t-3] = buf[t+place];
+     44c:	fed70fa3          	sb	a3,-1(a4)
+     450:	b745                	j	3f0 <_write.constprop.0+0x78>
+		*DMDATA1 = *(uint32_t*)&(buffer[0]);
+     452:	e0000ab7          	lui	s5,0xe0000
+     456:	8a2a                	mv	s4,a0
+     458:	4901                	li	s2,0
+		if( tosend > 7 ) tosend = 7;
+     45a:	4b1d                	li	s6,7
+		*DMDATA1 = *(uint32_t*)&(buffer[0]);
+     45c:	384a8a93          	addi	s5,s5,900 # e0000384 <_eusrstack+0xbfffb384>
+		while( t < tosend && t < 3 )
+     460:	4b8d                	li	s7,3
+     462:	b7e1                	j	42a <_write.constprop.0+0xb2>
+
+00000464 <__puts_uart>:
+{
+     464:	1141                	addi	sp,sp,-16
+     466:	c422                	sw	s0,8(sp)
+     468:	c606                	sw	ra,12(sp)
+     46a:	842e                	mv	s0,a1
+	_write( 0, s, len );
+     46c:	3731                	jal	378 <_write.constprop.0>
+}
+     46e:	40b2                	lw	ra,12(sp)
+     470:	8522                	mv	a0,s0
+     472:	4422                	lw	s0,8(sp)
+     474:	0141                	addi	sp,sp,16
+     476:	8082                	ret
+
+00000478 <handle_reset>:
+	asm volatile( "\n\
+     478:	20000197          	auipc	gp,0x20000
+     47c:	f8418193          	addi	gp,gp,-124 # 200003fc <__global_pointer$>
+     480:	20005117          	auipc	sp,0x20005
+     484:	b8010113          	addi	sp,sp,-1152 # 20005000 <_eusrstack>
+     488:	6509                	lui	a0,0x2
+     48a:	88050513          	addi	a0,a0,-1920 # 1880 <ch32fun.c.5fdb2a71+0x131>
+     48e:	30051073          	csrw	mstatus,a0
+     492:	468d                	li	a3,3
+     494:	00000517          	auipc	a0,0x0
+     498:	b6c50513          	addi	a0,a0,-1172 # 0 <InterruptVector>
+     49c:	8d55                	or	a0,a0,a3
+     49e:	30551073          	csrw	mtvec,a0
+asm volatile(
+     4a2:	c0418513          	addi	a0,gp,-1020 # 20000000 <millis_cnt>
+     4a6:	20001597          	auipc	a1,0x20001
+     4aa:	8ca58593          	addi	a1,a1,-1846 # 20000d70 <_ebss>
+     4ae:	4601                	li	a2,0
+     4b0:	00b55663          	bge	a0,a1,4bc <handle_reset+0x44>
+     4b4:	c110                	sw	a2,0(a0)
+     4b6:	0511                	addi	a0,a0,4
+     4b8:	feb54ee3          	blt	a0,a1,4b4 <handle_reset+0x3c>
+     4bc:	00001517          	auipc	a0,0x1
+     4c0:	f7450513          	addi	a0,a0,-140 # 1430 <_data_lma>
+     4c4:	c0418593          	addi	a1,gp,-1020 # 20000000 <millis_cnt>
+     4c8:	c0418613          	addi	a2,gp,-1020 # 20000000 <millis_cnt>
+     4cc:	00c58863          	beq	a1,a2,4dc <handle_reset+0x64>
+     4d0:	4114                	lw	a3,0(a0)
+     4d2:	c194                	sw	a3,0(a1)
+     4d4:	0511                	addi	a0,a0,4
+     4d6:	0591                	addi	a1,a1,4
+     4d8:	fec59ae3          	bne	a1,a2,4cc <handle_reset+0x54>
+	SysTick->CTLR = 5;
+     4dc:	e000f7b7          	lui	a5,0xe000f
+     4e0:	4715                	li	a4,5
+     4e2:	c398                	sw	a4,0(a5)
+asm volatile(
+     4e4:	6785                	lui	a5,0x1
+     4e6:	e7878793          	addi	a5,a5,-392 # e78 <main>
+     4ea:	34179073          	csrw	mepc,a5
+     4ee:	30200073          	mret
+
+000004f2 <ADC1_2_IRQHandler>:
+
+// Return the Machine Exception Program Register (MEPC)
+static inline uint32_t __get_MEPC(void)
+{
+	uint32_t result;
+	__ASM volatile( ADD_ARCH_ZICSR "csrr %0," "mepc" : "=r"(result));
+     4f2:	34102573          	csrr	a0,mepc
+	PrintHex( __get_MEPC() ); // "addr2line -e debugprintfdemo.elf 0x000007e6" ---> debugprintfdemo.c:45
+     4f6:	395d                	jal	1ac <PrintHex>
+	__ASM volatile( ADD_ARCH_ZICSR "csrr %0, mstatus": "=r"(result) );
+     4f8:	30002573          	csrr	a0,mstatus
+	PrintHex( __get_MSTATUS() );
+     4fc:	3945                	jal	1ac <PrintHex>
+
+// Return the Machine Trap Value Register (MTVAL)
+static inline uint32_t __get_MTVAL(void)
+{
+	uint32_t result;
+	__ASM volatile( ADD_ARCH_ZICSR "csrr %0," "mtval" : "=r" (result) );
+     4fe:	34302573          	csrr	a0,mtval
+	PrintHex( __get_MTVAL() );
+     502:	316d                	jal	1ac <PrintHex>
+	__ASM volatile( ADD_ARCH_ZICSR "csrr %0," "mcause": "=r"(result));
+     504:	34202573          	csrr	a0,mcause
+	PrintHex( __get_MCAUSE() );
+     508:	3155                	jal	1ac <PrintHex>
+	while( (*DMDATA0) & 0x80 );
+     50a:	e00007b7          	lui	a5,0xe0000
+     50e:	38078793          	addi	a5,a5,896 # e0000380 <_eusrstack+0xbfffb380>
+     512:	4398                	lw	a4,0(a5)
+     514:	08077713          	andi	a4,a4,128
+     518:	ff6d                	bnez	a4,512 <ADC1_2_IRQHandler+0x20>
+	*DMDATA0 = 0x0a85;
+     51a:	6705                	lui	a4,0x1
+     51c:	a8570713          	addi	a4,a4,-1403 # a85 <USBFS_IRQHandler+0x539>
+     520:	c398                	sw	a4,0(a5)
+	while( (*DMDATA0) & 0x80 );
+     522:	e00007b7          	lui	a5,0xe0000
+     526:	38078793          	addi	a5,a5,896 # e0000380 <_eusrstack+0xbfffb380>
+     52a:	4398                	lw	a4,0(a5)
+     52c:	08077713          	andi	a4,a4,128
+     530:	ff6d                	bnez	a4,52a <ADC1_2_IRQHandler+0x38>
+	*DMDATA0 = 0xaaaaaa83;
+     532:	aaaab737          	lui	a4,0xaaaab
+     536:	a8370713          	addi	a4,a4,-1405 # aaaaaa83 <_eusrstack+0x8aaa5a83>
+     53a:	c398                	sw	a4,0(a5)
+	asm volatile( "1: j 1b" );
+     53c:	a001                	j	53c <ADC1_2_IRQHandler+0x4a>
+
+0000053e <NMI_Handler>:
+	RCC->INTR |= RCC_CSSC;	// clear the clock security int flag
+     53e:	40021737          	lui	a4,0x40021
+     542:	471c                	lw	a5,8(a4)
+     544:	008006b7          	lui	a3,0x800
+     548:	8fd5                	or	a5,a5,a3
+     54a:	c71c                	sw	a5,8(a4)
+
+0000054c <USBFS_IRQHandler>:
+{
+     54c:	7159                	addi	sp,sp,-112
+     54e:	c0be                	sw	a5,64(sp)
+	uint16_t intfgst = *(uint16_t*)(&USBFS->INT_FG);
+     550:	400237b7          	lui	a5,0x40023
+{
+     554:	d652                	sw	s4,44(sp)
+	uint16_t intfgst = *(uint16_t*)(&USBFS->INT_FG);
+     556:	4067da03          	lhu	s4,1030(a5) # 40023406 <_eusrstack+0x2001e406>
+{
+     55a:	cc66                	sw	s9,24(sp)
+     55c:	d686                	sw	ra,108(sp)
+     55e:	d496                	sw	t0,104(sp)
+     560:	d29a                	sw	t1,100(sp)
+     562:	d09e                	sw	t2,96(sp)
+     564:	cea2                	sw	s0,92(sp)
+     566:	cca6                	sw	s1,88(sp)
+     568:	caaa                	sw	a0,84(sp)
+     56a:	c8ae                	sw	a1,80(sp)
+     56c:	c6b2                	sw	a2,76(sp)
+     56e:	c4b6                	sw	a3,72(sp)
+     570:	c2ba                	sw	a4,68(sp)
+     572:	de42                	sw	a6,60(sp)
+     574:	dc46                	sw	a7,56(sp)
+     576:	da4a                	sw	s2,52(sp)
+     578:	d84e                	sw	s3,48(sp)
+     57a:	d456                	sw	s5,40(sp)
+     57c:	d25a                	sw	s6,36(sp)
+     57e:	d05e                	sw	s7,32(sp)
+     580:	ce62                	sw	s8,28(sp)
+     582:	ca6a                	sw	s10,20(sp)
+     584:	c86e                	sw	s11,16(sp)
+     586:	c672                	sw	t3,12(sp)
+     588:	c476                	sw	t4,8(sp)
+     58a:	c27a                	sw	t5,4(sp)
+     58c:	c07e                	sw	t6,0(sp)
+	if( intfgst & CRB_UIF_TRANSFER )
+     58e:	002a7793          	andi	a5,s4,2
+     592:	5c078463          	beqz	a5,b5a <USBFS_IRQHandler+0x60e>
+		if( usb_debug ) printf("[USB] TRANSFER, token = %02x, ep = %d, bmRequestType = %02x, bRequest = %02x\n", token, ep, pUSBFS_SetupReqPak->bmRequestType, pUSBFS_SetupReqPak->bRequest);
+     596:	c0c1c783          	lbu	a5,-1012(gp) # 20000008 <usb_debug>
+		int token = ( intfgst & CMASK_UIS_TOKEN) >> 12;
+     59a:	40ca5493          	srai	s1,s4,0xc
+		int ep = ( intfgst & CMASK_UIS_ENDP ) >> 8;
+     59e:	408a5c13          	srai	s8,s4,0x8
+		int token = ( intfgst & CMASK_UIS_TOKEN) >> 12;
+     5a2:	888d                	andi	s1,s1,3
+		int ep = ( intfgst & CMASK_UIS_ENDP ) >> 8;
+     5a4:	00fc7413          	andi	s0,s8,15
+		if( usb_debug ) printf("[USB] TRANSFER, token = %02x, ep = %d, bmRequestType = %02x, bRequest = %02x\n", token, ep, pUSBFS_SetupReqPak->bmRequestType, pUSBFS_SetupReqPak->bRequest);
+     5a8:	c385                	beqz	a5,5c8 <USBFS_IRQHandler+0x7c>
+     5aa:	200017b7          	lui	a5,0x20001
+     5ae:	c4478793          	addi	a5,a5,-956 # 20000c44 <USBFSCTX>
+     5b2:	0117c703          	lbu	a4,17(a5)
+     5b6:	0107c683          	lbu	a3,16(a5)
+     5ba:	6505                	lui	a0,0x1
+     5bc:	8622                	mv	a2,s0
+     5be:	85a6                	mv	a1,s1
+     5c0:	2b450513          	addi	a0,a0,692 # 12b4 <language+0xc>
+     5c4:	011000ef          	jal	dd4 <printf>
+		switch ( token )
+     5c8:	4609                	li	a2,2
+     5ca:	04c48f63          	beq	s1,a2,628 <USBFS_IRQHandler+0xdc>
+     5ce:	400237b7          	lui	a5,0x40023
+     5d2:	470d                	li	a4,3
+     5d4:	40078793          	addi	a5,a5,1024 # 40023400 <_eusrstack+0x2001e400>
+     5d8:	2ae48063          	beq	s1,a4,878 <USBFS_IRQHandler+0x32c>
+     5dc:	16048263          	beqz	s1,740 <USBFS_IRQHandler+0x1f4>
+		USBFS->INT_FG = CRB_UIF_TRANSFER;
+     5e0:	400237b7          	lui	a5,0x40023
+     5e4:	4709                	li	a4,2
+     5e6:	40e78323          	sb	a4,1030(a5) # 40023406 <_eusrstack+0x2001e406>
+}
+     5ea:	4476                	lw	s0,92(sp)
+     5ec:	50b6                	lw	ra,108(sp)
+     5ee:	52a6                	lw	t0,104(sp)
+     5f0:	5316                	lw	t1,100(sp)
+     5f2:	5386                	lw	t2,96(sp)
+     5f4:	44e6                	lw	s1,88(sp)
+     5f6:	4556                	lw	a0,84(sp)
+     5f8:	45c6                	lw	a1,80(sp)
+     5fa:	4636                	lw	a2,76(sp)
+     5fc:	46a6                	lw	a3,72(sp)
+     5fe:	4716                	lw	a4,68(sp)
+     600:	4786                	lw	a5,64(sp)
+     602:	5872                	lw	a6,60(sp)
+     604:	58e2                	lw	a7,56(sp)
+     606:	5952                	lw	s2,52(sp)
+     608:	59c2                	lw	s3,48(sp)
+     60a:	5a32                	lw	s4,44(sp)
+     60c:	5aa2                	lw	s5,40(sp)
+     60e:	5b12                	lw	s6,36(sp)
+     610:	5b82                	lw	s7,32(sp)
+     612:	4c72                	lw	s8,28(sp)
+     614:	4ce2                	lw	s9,24(sp)
+     616:	4d52                	lw	s10,20(sp)
+     618:	4dc2                	lw	s11,16(sp)
+     61a:	4e32                	lw	t3,12(sp)
+     61c:	4ea2                	lw	t4,8(sp)
+     61e:	4f12                	lw	t5,4(sp)
+     620:	4f82                	lw	t6,0(sp)
+     622:	6165                	addi	sp,sp,112
+     624:	30200073          	mret
+			if( ep )
+     628:	c839                	beqz	s0,67e <USBFS_IRQHandler+0x132>
+				if( ep < FUSB_CONFIG_EPS )
+     62a:	00cc7793          	andi	a5,s8,12
+     62e:	fbcd                	bnez	a5,5e0 <USBFS_IRQHandler+0x94>
+
+int HandleInRequest( struct _USBState * ctx, int endp, uint8_t * data, int len )
+{
+	int ret = 0;  // Just NAK
+	// if (usb_debug) printf("HandleInRequest - EP%d\n", endp);
+	switch (endp)
+     630:	478d                	li	a5,3
+     632:	00f41863          	bne	s0,a5,642 <USBFS_IRQHandler+0xf6>
+	{
+		case 1:
+			// ret = -1; // Just ACK
+			break;
+		case 3:
+			cdc.rxing = 0;
+     636:	200017b7          	lui	a5,0x20001
+     63a:	c0c78793          	addi	a5,a5,-1012 # 20000c0c <cdc>
+     63e:	00078823          	sb	zero,16(a5)
+					UEP_CTRL_TX(ep) ^= USBFS_UEP_T_TOG;
+     642:	400237b7          	lui	a5,0x40023
+     646:	42278793          	addi	a5,a5,1058 # 40023422 <_eusrstack+0x2001e422>
+     64a:	00241713          	slli	a4,s0,0x2
+     64e:	973e                	add	a4,a4,a5
+     650:	00075783          	lhu	a5,0(a4) # 40021000 <_eusrstack+0x2001c000>
+     654:	0407c793          	xori	a5,a5,64
+     658:	00f71023          	sh	a5,0(a4)
+						UEP_CTRL_TX(ep) = ( UEP_CTRL_TX(ep) & ~USBFS_UEP_T_RES_MASK ) | USBFS_UEP_T_RES_NAK;
+     65c:	00075783          	lhu	a5,0(a4)
+     660:	07c2                	slli	a5,a5,0x10
+     662:	83c1                	srli	a5,a5,0x10
+     664:	9bf1                	andi	a5,a5,-4
+     666:	0027e793          	ori	a5,a5,2
+     66a:	00f71023          	sh	a5,0(a4)
+					ctx->USBFS_Endp_Busy[ ep ] = 0;
+     66e:	200017b7          	lui	a5,0x20001
+     672:	c4478793          	addi	a5,a5,-956 # 20000c44 <USBFSCTX>
+     676:	97a2                	add	a5,a5,s0
+     678:	12078223          	sb	zero,292(a5)
+     67c:	b795                	j	5e0 <USBFS_IRQHandler+0x94>
+				if( ctx->USBFS_SetupReqLen == 0 )
+     67e:	20001437          	lui	s0,0x20001
+     682:	c4440793          	addi	a5,s0,-956 # 20000c44 <USBFSCTX>
+     686:	0027d783          	lhu	a5,2(a5)
+     68a:	c4440413          	addi	s0,s0,-956
+     68e:	e799                	bnez	a5,69c <USBFS_IRQHandler+0x150>
+					UEP_CTRL_TX(0) = USBFS_UEP_R_RES_ACK | USBFS_UEP_R_TOG;
+     690:	400237b7          	lui	a5,0x40023
+     694:	08000713          	li	a4,128
+     698:	42e79123          	sh	a4,1058(a5) # 40023422 <_eusrstack+0x2001e422>
+				if( ctx->pCtrlPayloadPtr )
+     69c:	00c42983          	lw	s3,12(s0)
+				ctx->USBFS_errata_dont_send_endpoint_in_window = 0;
+     6a0:	12040423          	sb	zero,296(s0)
+				if( ctx->pCtrlPayloadPtr )
+     6a4:	04098a63          	beqz	s3,6f8 <USBFS_IRQHandler+0x1ac>
+					len = ctx->USBFS_SetupReqLen >= DEF_USBD_UEP0_SIZE ? DEF_USBD_UEP0_SIZE : ctx->USBFS_SetupReqLen;
+     6a8:	00245483          	lhu	s1,2(s0)
+     6ac:	04000793          	li	a5,64
+     6b0:	8926                	mv	s2,s1
+     6b2:	0097f363          	bgeu	a5,s1,6b8 <USBFS_IRQHandler+0x16c>
+     6b6:	893e                	mv	s2,a5
+     6b8:	0942                	slli	s2,s2,0x10
+     6ba:	01095913          	srli	s2,s2,0x10
+					ctx->USBFS_SetupReqLen -= len;
+     6be:	412484b3          	sub	s1,s1,s2
+					copyBuffer( ctrl0buff, ctx->pCtrlPayloadPtr, len ); // FYI -> Would need to do this if using DMA
+     6c2:	20001537          	lui	a0,0x20001
+					ctx->USBFS_SetupReqLen -= len;
+     6c6:	04c2                	slli	s1,s1,0x10
+					copyBuffer( ctrl0buff, ctx->pCtrlPayloadPtr, len ); // FYI -> Would need to do this if using DMA
+     6c8:	864a                	mv	a2,s2
+     6ca:	85ce                	mv	a1,s3
+     6cc:	c5450513          	addi	a0,a0,-940 # 20000c54 <USBFSCTX+0x10>
+					ctx->USBFS_SetupReqLen -= len;
+     6d0:	80c1                	srli	s1,s1,0x10
+					copyBuffer( ctrl0buff, ctx->pCtrlPayloadPtr, len ); // FYI -> Would need to do this if using DMA
+     6d2:	2725                	jal	dfa <memcpy>
+					ctx->USBFS_SetupReqLen -= len;
+     6d4:	00941123          	sh	s1,2(s0)
+						ctx->pCtrlPayloadPtr = 0;
+     6d8:	4781                	li	a5,0
+					if( ctx->USBFS_SetupReqLen > 0 )
+     6da:	c099                	beqz	s1,6e0 <USBFS_IRQHandler+0x194>
+						ctx->pCtrlPayloadPtr += len;
+     6dc:	012987b3          	add	a5,s3,s2
+     6e0:	c45c                	sw	a5,12(s0)
+					UEP_CTRL_LEN(0) = len;
+     6e2:	400237b7          	lui	a5,0x40023
+     6e6:	43279023          	sh	s2,1056(a5) # 40023420 <_eusrstack+0x2001e420>
+						UEP_CTRL_TX(0) ^= USBFS_UEP_T_TOG;
+     6ea:	4227d703          	lhu	a4,1058(a5)
+     6ee:	04074713          	xori	a4,a4,64
+			UEP_CTRL_TX(0) = USBFS_UEP_T_TOG | USBFS_UEP_T_RES_STALL | USBFS_UEP_R_TOG | USBFS_UEP_R_RES_STALL;
+     6f2:	42e79123          	sh	a4,1058(a5)
+     6f6:	b5ed                	j	5e0 <USBFS_IRQHandler+0x94>
+				else if ( ( ctx->USBFS_SetupReqType & USB_REQ_TYP_MASK ) != USB_REQ_TYP_STANDARD )
+     6f8:	00144783          	lbu	a5,1(s0)
+     6fc:	0607f793          	andi	a5,a5,96
+     700:	cf99                	beqz	a5,71e <USBFS_IRQHandler+0x1d2>
+					if( len && USBFSCTX.USBFS_SetupReqCode != HID_GET_REPORT )
+     702:	00245783          	lhu	a5,2(s0)
+     706:	ec078de3          	beqz	a5,5e0 <USBFS_IRQHandler+0x94>
+     70a:	00044703          	lbu	a4,0(s0)
+     70e:	4785                	li	a5,1
+     710:	ecf708e3          	beq	a4,a5,5e0 <USBFS_IRQHandler+0x94>
+						UEP_CTRL_LEN(0) = len;
+     714:	400237b7          	lui	a5,0x40023
+     718:	42079023          	sh	zero,1056(a5) # 40023420 <_eusrstack+0x2001e420>
+     71c:	b7f9                	j	6ea <USBFS_IRQHandler+0x19e>
+					switch( USBFSCTX.USBFS_SetupReqCode )
+     71e:	00044703          	lbu	a4,0(s0)
+     722:	4795                	li	a5,5
+     724:	eaf71ee3          	bne	a4,a5,5e0 <USBFS_IRQHandler+0x94>
+							USBFS->DEV_ADDR = ( USBFS->DEV_ADDR & USBFS_UDA_GP_BIT ) | ctx->USBFS_DevAddr;
+     728:	400237b7          	lui	a5,0x40023
+     72c:	4037c683          	lbu	a3,1027(a5) # 40023403 <_eusrstack+0x2001e403>
+     730:	00944703          	lbu	a4,9(s0)
+     734:	0806f693          	andi	a3,a3,128
+     738:	8f55                	or	a4,a4,a3
+     73a:	40e781a3          	sb	a4,1027(a5)
+							break;
+     73e:	b54d                	j	5e0 <USBFS_IRQHandler+0x94>
+			len = USBFS->RX_LEN;
+     740:	0087d703          	lhu	a4,8(a5)
+			switch( ep )
+     744:	e831                	bnez	s0,798 <USBFS_IRQHandler+0x24c>
+					if( intfgst & CRB_UIS_TOG_OK )
+     746:	011a1793          	slli	a5,s4,0x11
+     74a:	e807dbe3          	bgez	a5,5e0 <USBFS_IRQHandler+0x94>
+						if ( ctx->USBFS_SetupReqCode != HID_SET_REPORT )
+     74e:	200017b7          	lui	a5,0x20001
+     752:	c4478713          	addi	a4,a5,-956 # 20000c44 <USBFSCTX>
+     756:	00074603          	lbu	a2,0(a4)
+     75a:	46a5                	li	a3,9
+     75c:	c4478793          	addi	a5,a5,-956
+     760:	02d60263          	beq	a2,a3,784 <USBFS_IRQHandler+0x238>
+void HandleDataOut( struct _USBState * ctx, int endp, uint8_t * data, int len )
+{
+	// if (usb_debug) printf("HandleDataOut - EP%d\n", endp);
+	if( endp == 0 )
+	{
+		ctx->USBFS_SetupReqLen = 0; // To ACK
+     764:	00079123          	sh	zero,2(a5)
+							if ( ( ctx->USBFS_SetupReqType & USB_REQ_TYP_IN ) == 0 )
+     768:	00178703          	lb	a4,1(a5)
+     76c:	00074563          	bltz	a4,776 <USBFS_IRQHandler+0x22a>
+								ctx->USBFS_errata_dont_send_endpoint_in_window = 1;
+     770:	4705                	li	a4,1
+     772:	12e78423          	sb	a4,296(a5)
+							UEP_CTRL_LEN(0) = 0;
+     776:	400237b7          	lui	a5,0x40023
+     77a:	42079023          	sh	zero,1056(a5) # 40023420 <_eusrstack+0x2001e420>
+							UEP_CTRL_TX(0) = USBFS_UEP_T_TOG | CHECK_USBFS_UEP_T_AUTO_TOG | USBFS_UEP_T_RES_ACK;
+     77e:	05000713          	li	a4,80
+     782:	bf85                	j	6f2 <USBFS_IRQHandler+0x1a6>
+						if( ctx->USBFS_SetupReqLen == 0 )
+     784:	00275703          	lhu	a4,2(a4)
+     788:	d365                	beqz	a4,768 <USBFS_IRQHandler+0x21c>
+							UEP_CTRL_TX(0) ^= USBFS_UEP_R_TOG;
+     78a:	400237b7          	lui	a5,0x40023
+     78e:	4227d703          	lhu	a4,1058(a5) # 40023422 <_eusrstack+0x2001e422>
+     792:	08074713          	xori	a4,a4,128
+     796:	bfb1                	j	6f2 <USBFS_IRQHandler+0x1a6>
+					UEP_CTRL_TX(ep) ^= USBFS_UEP_R_TOG;
+     798:	400236b7          	lui	a3,0x40023
+     79c:	42268693          	addi	a3,a3,1058 # 40023422 <_eusrstack+0x2001e422>
+     7a0:	00241713          	slli	a4,s0,0x2
+     7a4:	9736                	add	a4,a4,a3
+     7a6:	00075683          	lhu	a3,0(a4)
+     7aa:	0806c693          	xori	a3,a3,128
+     7ae:	00d71023          	sh	a3,0(a4)
+			// cdc.uart->stop_bits = CTRL0BUFF[4];
+			// cdc.uart->parity = CTRL0BUFF[5];
+			// cdc.uart->word_length = CTRL0BUFF[6];
+		}
+	}
+	if( endp == 2 )
+     7b2:	e2c417e3          	bne	s0,a2,5e0 <USBFS_IRQHandler+0x94>
+	{
+		if( cdc.tx_stop )
+     7b6:	20001637          	lui	a2,0x20001
+     7ba:	c0c60713          	addi	a4,a2,-1012 # 20000c0c <cdc>
+     7be:	03474683          	lbu	a3,52(a4)
+     7c2:	c0c60613          	addi	a2,a2,-1012
+     7c6:	c681                	beqz	a3,7ce <USBFS_IRQHandler+0x282>
+		{
+			cdc.tx_stop = 0;
+     7c8:	02070a23          	sb	zero,52(a4)
+			return;
+     7cc:	bd11                	j	5e0 <USBFS_IRQHandler+0x94>
+		}
+		// printf("uart_tx_buffer: 0=%c, 1=%c, 2=%c, 3=%c\n", uart_tx_buffer[uart.tx_pos], uart_tx_buffer[uart.tx_pos + 1], uart_tx_buffer[uart.tx_pos + 2], uart_tx_buffer[uart.tx_pos + 3]);
+		int pad = 4 - USBFS->RX_LEN;
+     7ce:	0087d703          	lhu	a4,8(a5)
+		if( pad < 0 ) pad = 0;
+		uint32_t write_pos = cdc.tx_pos + cdc.tx_remain + USBFS->RX_LEN;
+     7d2:	5658                	lw	a4,44(a2)
+     7d4:	560c                	lw	a1,40(a2)
+     7d6:	0087d783          	lhu	a5,8(a5)
+     7da:	97ae                	add	a5,a5,a1
+     7dc:	97ba                	add	a5,a5,a4
+		if( write_pos > cdc.tx_wrap_pos ) write_pos -= cdc.tx_wrap_pos;
+     7de:	5a18                	lw	a4,48(a2)
+     7e0:	00f77363          	bgeu	a4,a5,7e6 <USBFS_IRQHandler+0x29a>
+     7e4:	8f99                	sub	a5,a5,a4
+		if( write_pos & 0x3 )
+     7e6:	0037f713          	andi	a4,a5,3
+     7ea:	c30d                	beqz	a4,80c <USBFS_IRQHandler+0x2c0>
+
+static inline int USBFS_SendNAK( int endp, int tx )
+{
+	if( tx ) UEP_CTRL_TX( endp ) = ( UEP_CTRL_TX( endp ) & ~USBFS_UEP_T_RES_MASK ) | USBFS_UEP_T_RES_NAK;
+#if defined (CH5xx) || defined (CH32X03x) || defined (CH32V10x)
+	else UEP_CTRL_TX(endp) = ( UEP_CTRL_TX(endp) & ~USBFS_UEP_R_RES_MASK ) | USBFS_UEP_R_RES_NAK;
+     7ec:	400236b7          	lui	a3,0x40023
+     7f0:	42a6d703          	lhu	a4,1066(a3) # 4002342a <_eusrstack+0x2001e42a>
+		{
+			write_pos = (write_pos + 4) & ~0x3;
+     7f4:	0791                	addi	a5,a5,4
+     7f6:	9bf1                	andi	a5,a5,-4
+     7f8:	0742                	slli	a4,a4,0x10
+     7fa:	8341                	srli	a4,a4,0x10
+     7fc:	9b4d                	andi	a4,a4,-13
+     7fe:	00876713          	ori	a4,a4,8
+     802:	42e69523          	sh	a4,1066(a3)
+			USBFS_SendNAK( 2, 0 );
+			// USBFS->UEP2_RX_CTRL &= ~USBFS_UEP_R_RES_MASK;
+			// USBFS->UEP2_RX_CTRL |= USBFS_UEP_R_RES_NAK;
+			cdc.tx_stop = 1;
+     806:	4705                	li	a4,1
+     808:	02e60a23          	sb	a4,52(a2)
+		}
+		// printf("[HandleDatOut] write_pos = %d, tx_pos = %d, tx_remain = %d, USBFS->RX_LEN = %d \n", write_pos, cdc.tx_pos, cdc.tx_remain, USBFS->RX_LEN);
+		// if( write_pos >= uart.tx_wrap_pos) write_pos = uart.tx_remain - (uart.tx_wrap_pos - uart.tx_pos);
+		// if( write_pos < uart.tx_pos && write_pos + 64 >= uart.tx_pos ) goto buffer_overflow;
+		if( write_pos > ( UART_TX_BUF_SIZE - 64) )
+     80c:	3c000713          	li	a4,960
+     810:	00f77d63          	bgeu	a4,a5,82a <USBFS_IRQHandler+0x2de>
+		{
+			// printf("WRAP -> write_pos = %d > 960, 961 = %c\n", write_pos, uart_tx_buffer[961]);
+			cdc.tx_wrap_pos = cdc.tx_pos + cdc.tx_remain + USBFS->RX_LEN;
+     814:	400237b7          	lui	a5,0x40023
+     818:	40078793          	addi	a5,a5,1024 # 40023400 <_eusrstack+0x2001e400>
+     81c:	5658                	lw	a4,44(a2)
+     81e:	0087d783          	lhu	a5,8(a5)
+     822:	97ae                	add	a5,a5,a1
+     824:	97ba                	add	a5,a5,a4
+     826:	da1c                	sw	a5,48(a2)
+			write_pos = 0;
+     828:	4781                	li	a5,0
+		// if( write_pos + len > UART_TX_BUF_SIZE - 1 )
+		// {
+		//   uart.tx_wrap_pos = write_pos;
+		//   write_pos = 0;
+		// }
+		USBFS->UEP2_DMA = (uint32_t)(uart_tx_buffer + write_pos);
+     82a:	20001737          	lui	a4,0x20001
+     82e:	80c70713          	addi	a4,a4,-2036 # 2000080c <uart_tx_buffer>
+     832:	97ba                	add	a5,a5,a4
+     834:	40023737          	lui	a4,0x40023
+     838:	40070713          	addi	a4,a4,1024 # 40023400 <_eusrstack+0x2001e400>
+     83c:	cf1c                	sw	a5,24(a4)
+		// printf("USBFS->UEP2_DMA = %08x\n", USBFS->UEP2_DMA);
+		
+		if( cdc.tx_remain >= ( UART_TX_BUF_SIZE ) )
+     83e:	5658                	lw	a4,44(a2)
+     840:	3ff00793          	li	a5,1023
+     844:	02e7f063          	bgeu	a5,a4,864 <USBFS_IRQHandler+0x318>
+     848:	40023737          	lui	a4,0x40023
+     84c:	42a75783          	lhu	a5,1066(a4) # 4002342a <_eusrstack+0x2001e42a>
+     850:	07c2                	slli	a5,a5,0x10
+     852:	83c1                	srli	a5,a5,0x10
+     854:	9bcd                	andi	a5,a5,-13
+     856:	0087e793          	ori	a5,a5,8
+     85a:	42f71523          	sh	a5,1066(a4)
+		{
+			// if( usb_debug ) printf("Buffer overflow, %c\n", uart_tx_buffer[961]);
+			USBFS_SendNAK( 2, 0 );
+			// USBFS->UEP2_RX_CTRL &= ~USBFS_UEP_R_RES_MASK;
+			// USBFS->UEP2_RX_CTRL |= USBFS_UEP_R_RES_NAK;
+			cdc.tx_stop = 1;
+     85e:	4785                	li	a5,1
+     860:	02f60a23          	sb	a5,52(a2)
+		}
+		cdc.tx_remain += USBFS->RX_LEN;
+     864:	400237b7          	lui	a5,0x40023
+     868:	40078793          	addi	a5,a5,1024 # 40023400 <_eusrstack+0x2001e400>
+     86c:	0087d783          	lhu	a5,8(a5)
+     870:	5658                	lw	a4,44(a2)
+     872:	97ba                	add	a5,a5,a4
+     874:	d65c                	sw	a5,44(a2)
+     876:	b3ad                	j	5e0 <USBFS_IRQHandler+0x94>
+			if (!(USBFS->INT_ST & 0x80)) goto replycomplete;
+     878:	0077c783          	lbu	a5,7(a5)
+     87c:	07e2                	slli	a5,a5,0x18
+     87e:	87e1                	srai	a5,a5,0x18
+     880:	d607d0e3          	bgez	a5,5e0 <USBFS_IRQHandler+0x94>
+			int USBFS_SetupReqType = USBFSCTX.USBFS_SetupReqType  = pUSBFS_SetupReqPak->bmRequestType;
+     884:	20001db7          	lui	s11,0x20001
+			UEP_CTRL_TX(0) = USBFS_UEP_T_RES_NAK | USBFS_UEP_T_TOG | USBFS_UEP_R_RES_NAK | USBFS_UEP_R_TOG | CHECK_USBFS_UEP_AUTO_TOG;
+     888:	400237b7          	lui	a5,0x40023
+     88c:	0da00713          	li	a4,218
+     890:	42e79123          	sh	a4,1058(a5) # 40023422 <_eusrstack+0x2001e422>
+			int USBFS_SetupReqType = USBFSCTX.USBFS_SetupReqType  = pUSBFS_SetupReqPak->bmRequestType;
+     894:	c44d8613          	addi	a2,s11,-956 # 20000c44 <USBFSCTX>
+			int USBFS_SetupReqCode = USBFSCTX.USBFS_SetupReqCode  = pUSBFS_SetupReqPak->bRequest;
+     898:	01065783          	lhu	a5,16(a2)
+     89c:	01465b83          	lhu	s7,20(a2)
+			int USBFS_SetupReqLen = USBFSCTX.USBFS_SetupReqLen    = pUSBFS_SetupReqPak->wLength;
+     8a0:	01665b03          	lhu	s6,22(a2)
+			int USBFS_SetupReqCode = USBFSCTX.USBFS_SetupReqCode  = pUSBFS_SetupReqPak->bRequest;
+     8a4:	0087d713          	srli	a4,a5,0x8
+     8a8:	07a2                	slli	a5,a5,0x8
+     8aa:	8fd9                	or	a5,a5,a4
+     8ac:	01265703          	lhu	a4,18(a2)
+     8b0:	c4fd9223          	sh	a5,-956(s11)
+     8b4:	010b9793          	slli	a5,s7,0x10
+     8b8:	00e7ed33          	or	s10,a5,a4
+			if( usb_debug ) printf( "[USB] SETUP: %02x %02x %02d %02x %04x\n", USBFS_SetupReqType, USBFS_SetupReqCode, USBFS_SetupReqLen, USBFS_SetupReqIndex, USBFS_IndexValue );
+     8bc:	c0c1c783          	lbu	a5,-1012(gp) # 20000008 <usb_debug>
+			int USBFS_SetupReqLen = USBFSCTX.USBFS_SetupReqLen    = pUSBFS_SetupReqPak->wLength;
+     8c0:	01661123          	sh	s6,2(a2)
+			int USBFS_IndexValue = USBFSCTX.USBFS_IndexValue = ( pUSBFS_SetupReqPak->wIndex << 16 ) | pUSBFS_SetupReqPak->wValue;
+     8c4:	01a62223          	sw	s10,4(a2)
+			int USBFS_SetupReqType = USBFSCTX.USBFS_SetupReqType  = pUSBFS_SetupReqPak->bmRequestType;
+     8c8:	01064a83          	lbu	s5,16(a2)
+			int USBFS_SetupReqCode = USBFSCTX.USBFS_SetupReqCode  = pUSBFS_SetupReqPak->bRequest;
+     8cc:	01164903          	lbu	s2,17(a2)
+			int USBFS_SetupReqLen = USBFSCTX.USBFS_SetupReqLen    = pUSBFS_SetupReqPak->wLength;
+     8d0:	89da                	mv	s3,s6
+			if( usb_debug ) printf( "[USB] SETUP: %02x %02x %02d %02x %04x\n", USBFS_SetupReqType, USBFS_SetupReqCode, USBFS_SetupReqLen, USBFS_SetupReqIndex, USBFS_IndexValue );
+     8d2:	c44d8493          	addi	s1,s11,-956
+     8d6:	cb91                	beqz	a5,8ea <USBFS_IRQHandler+0x39e>
+     8d8:	6505                	lui	a0,0x1
+     8da:	87ea                	mv	a5,s10
+     8dc:	875e                	mv	a4,s7
+     8de:	86da                	mv	a3,s6
+     8e0:	864a                	mv	a2,s2
+     8e2:	85d6                	mv	a1,s5
+     8e4:	30450513          	addi	a0,a0,772 # 1304 <language+0x5c>
+     8e8:	21f5                	jal	dd4 <printf>
+			if( ( USBFS_SetupReqType & USB_REQ_TYP_MASK ) != USB_REQ_TYP_STANDARD )
+     8ea:	060af793          	andi	a5,s5,96
+     8ee:	cfdd                	beqz	a5,9ac <USBFS_IRQHandler+0x460>
+				if( ( USBFS_SetupReqType & USB_REQ_TYP_MASK ) == USB_REQ_TYP_CLASS )
+     8f0:	02000713          	li	a4,32
+     8f4:	0ee79c63          	bne	a5,a4,9ec <USBFS_IRQHandler+0x4a0>
+}
+
+int HandleSetupCustom( struct _USBState * ctx, int setup_code)
+{
+	int ret = -1;
+	if( ctx->USBFS_SetupReqType & USB_REQ_TYP_CLASS )
+     8f8:	0014c983          	lbu	s3,1(s1)
+     8fc:	00e9f733          	and	a4,s3,a4
+     900:	cf31                	beqz	a4,95c <USBFS_IRQHandler+0x410>
+	{
+		switch( setup_code )
+     902:	02100713          	li	a4,33
+     906:	04e90263          	beq	s2,a4,94a <USBFS_IRQHandler+0x3fe>
+     90a:	01276963          	bltu	a4,s2,91c <USBFS_IRQHandler+0x3d0>
+     90e:	00f90e63          	beq	s2,a5,92a <USBFS_IRQHandler+0x3de>
+			UEP_CTRL_TX(0) = USBFS_UEP_T_TOG | USBFS_UEP_T_RES_STALL | USBFS_UEP_R_TOG | USBFS_UEP_R_RES_STALL;
+     912:	400237b7          	lui	a5,0x40023
+     916:	0cf00713          	li	a4,207
+     91a:	bbe1                	j	6f2 <USBFS_IRQHandler+0x1a6>
+     91c:	fde90913          	addi	s2,s2,-34
+     920:	0ff97913          	zext.b	s2,s2
+     924:	4785                	li	a5,1
+     926:	ff27e6e3          	bltu	a5,s2,912 <USBFS_IRQHandler+0x3c6>
+		{
+			case CDC_SET_LINE_CODING:
+			case CDC_SET_LINE_CTLSTE:
+			case CDC_SEND_BREAK:
+				ret = (ctx->USBFS_SetupReqLen)?ctx->USBFS_SetupReqLen:-1;
+     92a:	0024d403          	lhu	s0,2(s1)
+     92e:	c815                	beqz	s0,962 <USBFS_IRQHandler+0x416>
+									copyBuffer( ctrl0buff, ctx->pCtrlPayloadPtr, len );
+     930:	00c4a903          	lw	s2,12(s1)
+     934:	20001537          	lui	a0,0x20001
+     938:	8622                	mv	a2,s0
+     93a:	85ca                	mv	a1,s2
+     93c:	c5450513          	addi	a0,a0,-940 # 20000c54 <USBFSCTX+0x10>
+									ctx->pCtrlPayloadPtr += len;
+     940:	9922                	add	s2,s2,s0
+									copyBuffer( ctrl0buff, ctx->pCtrlPayloadPtr, len );
+     942:	2965                	jal	dfa <memcpy>
+									ctx->pCtrlPayloadPtr += len;
+     944:	0124a623          	sw	s2,12(s1)
+     948:	a005                	j	968 <USBFS_IRQHandler+0x41c>
+
+				break;
+			case CDC_GET_LINE_CODING:
+				ctx->pCtrlPayloadPtr = cdc.cdc_cfg;
+     94a:	200017b7          	lui	a5,0x20001
+				ret = ctx->USBFS_SetupReqLen;
+     94e:	0024d403          	lhu	s0,2(s1)
+				ctx->pCtrlPayloadPtr = cdc.cdc_cfg;
+     952:	c1078793          	addi	a5,a5,-1008 # 20000c10 <cdc+0x4>
+     956:	c4dc                	sw	a5,12(s1)
+							if( len )
+     958:	fc61                	bnez	s0,930 <USBFS_IRQHandler+0x3e4>
+     95a:	bf65                	j	912 <USBFS_IRQHandler+0x3c6>
+			default:
+				ret = 0;
+				break;
+		}
+	}
+	else if( ctx->USBFS_SetupReqType & USB_REQ_TYP_VENDOR )
+     95c:	0409f793          	andi	a5,s3,64
+     960:	dbcd                	beqz	a5,912 <USBFS_IRQHandler+0x3c6>
+									ctx->USBFS_SetupReqLen = 0;
+     962:	00049123          	sh	zero,2(s1)
+									len = 0;
+     966:	4401                	li	s0,0
+								if( ctx->USBFS_SetupReqType & DEF_UEP_IN || ctx->USBFS_SetupReqLen == 0)
+     968:	09e2                	slli	s3,s3,0x18
+     96a:	4189d993          	srai	s3,s3,0x18
+     96e:	0009c563          	bltz	s3,978 <USBFS_IRQHandler+0x42c>
+     972:	0024d783          	lhu	a5,2(s1)
+     976:	e795                	bnez	a5,9a2 <USBFS_IRQHandler+0x456>
+									len = len >= DEF_USBD_UEP0_SIZE ? DEF_USBD_UEP0_SIZE : len;
+     978:	04000793          	li	a5,64
+     97c:	0087d363          	bge	a5,s0,982 <USBFS_IRQHandler+0x436>
+     980:	843e                	mv	s0,a5
+									UEP_CTRL_LEN(0) = len;
+     982:	0442                	slli	s0,s0,0x10
+     984:	400237b7          	lui	a5,0x40023
+     988:	8041                	srli	s0,s0,0x10
+     98a:	42879023          	sh	s0,1056(a5) # 40023420 <_eusrstack+0x2001e420>
+									UEP_CTRL_TX(0) = USBFS_UEP_T_TOG|USBFS_UEP_T_RES_ACK;
+     98e:	04000713          	li	a4,64
+     992:	42e79123          	sh	a4,1058(a5)
+									ctx->USBFS_SetupReqLen -= len;
+     996:	0024d783          	lhu	a5,2(s1)
+     99a:	8f81                	sub	a5,a5,s0
+     99c:	00f49123          	sh	a5,2(s1)
+     9a0:	b181                	j	5e0 <USBFS_IRQHandler+0x94>
+								else UEP_CTRL_TX(0)= USBFS_UEP_R_TOG|USBFS_UEP_R_RES_ACK;
+     9a2:	400237b7          	lui	a5,0x40023
+     9a6:	08000713          	li	a4,128
+     9aa:	b3a1                	j	6f2 <USBFS_IRQHandler+0x1a6>
+				switch( USBFS_SetupReqCode )
+     9ac:	47ad                	li	a5,11
+     9ae:	f727e2e3          	bltu	a5,s2,912 <USBFS_IRQHandler+0x3c6>
+     9b2:	6685                	lui	a3,0x1
+     9b4:	090a                	slli	s2,s2,0x2
+     9b6:	36068693          	addi	a3,a3,864 # 1360 <language+0xb8>
+     9ba:	9936                	add	s2,s2,a3
+     9bc:	00092783          	lw	a5,0(s2)
+     9c0:	8782                	jr	a5
+						const struct descriptor_list_struct * e = descriptor_list;
+     9c2:	6705                	lui	a4,0x1
+     9c4:	3e870713          	addi	a4,a4,1000 # 13e8 <descriptor_list>
+						for( ; e != e_end; e++ )
+     9c8:	6685                	lui	a3,0x1
+							if( e->lIndexValue == USBFS_IndexValue )
+     9ca:	431c                	lw	a5,0(a4)
+     9cc:	05a79463          	bne	a5,s10,a14 <USBFS_IRQHandler+0x4c8>
+								ctx->pCtrlPayloadPtr = (uint8_t*)e->addr;
+     9d0:	435c                	lw	a5,4(a4)
+						ctx->USBFS_SetupReqLen = len;
+     9d2:	c44d8d93          	addi	s11,s11,-956
+								ctx->pCtrlPayloadPtr = (uint8_t*)e->addr;
+     9d6:	c4dc                	sw	a5,12(s1)
+								len = e->length;
+     9d8:	00874783          	lbu	a5,8(a4)
+						if( len > USBFS_SetupReqLen )
+     9dc:	00fb5363          	bge	s6,a5,9e2 <USBFS_IRQHandler+0x496>
+     9e0:	87da                	mv	a5,s6
+						ctx->USBFS_SetupReqLen = len;
+     9e2:	00fd9123          	sh	a5,2(s11)
+						ctx->USBFS_DevAddr = (uint8_t)( ctx->USBFS_IndexValue & 0xFF );
+     9e6:	40dc                	lw	a5,4(s1)
+     9e8:	00f484a3          	sb	a5,9(s1)
+				if( USBFS_SetupReqType & DEF_UEP_IN )
+     9ec:	018a9593          	slli	a1,s5,0x18
+     9f0:	85e1                	srai	a1,a1,0x18
+     9f2:	1405d363          	bgez	a1,b38 <USBFS_IRQHandler+0x5ec>
+					len = ( USBFS_SetupReqLen > DEF_USBD_UEP0_SIZE )? DEF_USBD_UEP0_SIZE : USBFS_SetupReqLen;
+     9f6:	04000793          	li	a5,64
+     9fa:	0137d363          	bge	a5,s3,a00 <USBFS_IRQHandler+0x4b4>
+     9fe:	89be                	mv	s3,a5
+					UEP_CTRL_LEN(0) = len;
+     a00:	09c2                	slli	s3,s3,0x10
+     a02:	400237b7          	lui	a5,0x40023
+     a06:	0109d993          	srli	s3,s3,0x10
+     a0a:	43379023          	sh	s3,1056(a5) # 40023420 <_eusrstack+0x2001e420>
+					UEP_CTRL_TX(0) = USBFS_UEP_T_RES_ACK;
+     a0e:	42079123          	sh	zero,1058(a5)
+     a12:	b6f9                	j	5e0 <USBFS_IRQHandler+0x94>
+						for( ; e != e_end; e++ )
+     a14:	0731                	addi	a4,a4,12
+     a16:	43068793          	addi	a5,a3,1072 # 1430 <_data_lma>
+     a1a:	faf718e3          	bne	a4,a5,9ca <USBFS_IRQHandler+0x47e>
+     a1e:	bdd5                	j	912 <USBFS_IRQHandler+0x3c6>
+						ctrl0buff[0] = ctx->USBFS_DevConfig;
+     a20:	0084c783          	lbu	a5,8(s1)
+						if( ctx->USBFS_SetupReqLen > 1 )
+     a24:	0024d703          	lhu	a4,2(s1)
+						ctrl0buff[0] = ctx->USBFS_DevConfig;
+     a28:	00f48823          	sb	a5,16(s1)
+						if( ctx->USBFS_SetupReqLen > 1 )
+     a2c:	4785                	li	a5,1
+     a2e:	fae7ffe3          	bgeu	a5,a4,9ec <USBFS_IRQHandler+0x4a0>
+							ctx->USBFS_SetupReqLen = 1;
+     a32:	00f49123          	sh	a5,2(s1)
+     a36:	bf5d                	j	9ec <USBFS_IRQHandler+0x4a0>
+						ctx->USBFS_DevConfig = (uint8_t)( ctx->USBFS_IndexValue & 0xFF );
+     a38:	40dc                	lw	a5,4(s1)
+     a3a:	00f48423          	sb	a5,8(s1)
+						ctx->USBFS_DevEnumStatus = 0x01;
+     a3e:	4785                	li	a5,1
+     a40:	00f485a3          	sb	a5,11(s1)
+						break;
+     a44:	b765                	j	9ec <USBFS_IRQHandler+0x4a0>
+						if( ( USBFS_SetupReqType & USB_REQ_RECIP_MASK ) == USB_REQ_RECIP_ENDP )
+     a46:	01faf693          	andi	a3,s5,31
+     a4a:	4789                	li	a5,2
+     a4c:	ecf693e3          	bne	a3,a5,912 <USBFS_IRQHandler+0x3c6>
+							if( (uint8_t)( USBFS_IndexValue & 0xFF ) == USB_REQ_FEAT_ENDP_HALT )
+     a50:	0ffd7793          	zext.b	a5,s10
+     a54:	ea079fe3          	bnez	a5,912 <USBFS_IRQHandler+0x3c6>
+								if( ep < FUSB_CONFIG_EPS ) 
+     a58:	00cc7793          	andi	a5,s8,12
+     a5c:	ea079be3          	bnez	a5,912 <USBFS_IRQHandler+0x3c6>
+									if( USBFS_SetupReqIndex & DEF_UEP_IN  && ctx->endpoint_mode[ep] == -1 ) UEP_CTRL_TX(ep) = USBFS_UEP_T_RES_NAK;
+     a60:	080bf713          	andi	a4,s7,128
+     a64:	ea0707e3          	beqz	a4,912 <USBFS_IRQHandler+0x3c6>
+     a68:	04440793          	addi	a5,s0,68
+     a6c:	078a                	slli	a5,a5,0x2
+     a6e:	97a6                	add	a5,a5,s1
+     a70:	4398                	lw	a4,0(a5)
+     a72:	57fd                	li	a5,-1
+     a74:	e8f71fe3          	bne	a4,a5,912 <USBFS_IRQHandler+0x3c6>
+     a78:	400237b7          	lui	a5,0x40023
+     a7c:	040a                	slli	s0,s0,0x2
+     a7e:	42278793          	addi	a5,a5,1058 # 40023422 <_eusrstack+0x2001e422>
+     a82:	943e                	add	s0,s0,a5
+     a84:	00d41023          	sh	a3,0(s0)
+						break;
+     a88:	b795                	j	9ec <USBFS_IRQHandler+0x4a0>
+						else if( ( USBFS_SetupReqType & USB_REQ_RECIP_MASK ) == USB_REQ_RECIP_ENDP )
+     a8a:	01faf693          	andi	a3,s5,31
+     a8e:	4789                	li	a5,2
+     a90:	e8f691e3          	bne	a3,a5,912 <USBFS_IRQHandler+0x3c6>
+							if( (uint8_t)( USBFS_IndexValue & 0xFF ) == USB_REQ_FEAT_ENDP_HALT )
+     a94:	0ffd7793          	zext.b	a5,s10
+     a98:	e6079de3          	bnez	a5,912 <USBFS_IRQHandler+0x3c6>
+								if( ep < FUSB_CONFIG_EPS )
+     a9c:	00aa5793          	srli	a5,s4,0xa
+     aa0:	8b8d                	andi	a5,a5,3
+     aa2:	f7a9                	bnez	a5,9ec <USBFS_IRQHandler+0x4a0>
+									if( (USBFS_SetupReqIndex & DEF_UEP_IN) && ctx->endpoint_mode[ep] == -1 )UEP_CTRL_TX(ep) = ( UEP_CTRL_TX(ep) & ~USBFS_UEP_T_RES_MASK ) | USBFS_UEP_T_RES_STALL;
+     aa4:	080bf713          	andi	a4,s7,128
+     aa8:	e60705e3          	beqz	a4,912 <USBFS_IRQHandler+0x3c6>
+     aac:	04440793          	addi	a5,s0,68
+     ab0:	078a                	slli	a5,a5,0x2
+     ab2:	97a6                	add	a5,a5,s1
+     ab4:	4398                	lw	a4,0(a5)
+     ab6:	57fd                	li	a5,-1
+     ab8:	e4f71de3          	bne	a4,a5,912 <USBFS_IRQHandler+0x3c6>
+     abc:	400237b7          	lui	a5,0x40023
+     ac0:	42278793          	addi	a5,a5,1058 # 40023422 <_eusrstack+0x2001e422>
+     ac4:	040a                	slli	s0,s0,0x2
+     ac6:	943e                	add	s0,s0,a5
+     ac8:	00045783          	lhu	a5,0(s0)
+     acc:	0037e793          	ori	a5,a5,3
+     ad0:	00f41023          	sh	a5,0(s0)
+     ad4:	bf21                	j	9ec <USBFS_IRQHandler+0x4a0>
+						ctrl0buff[0] = 0x00;
+     ad6:	00048823          	sb	zero,16(s1)
+						if( USBFS_SetupReqLen > 1 ) USBFS_SetupReqLen = 1;
+     ada:	f16059e3          	blez	s6,9ec <USBFS_IRQHandler+0x4a0>
+     ade:	4985                	li	s3,1
+     ae0:	b731                	j	9ec <USBFS_IRQHandler+0x4a0>
+						ctrl0buff[0] = 0x00;
+     ae2:	00049823          	sh	zero,16(s1)
+						if( ( USBFS_SetupReqType & USB_REQ_RECIP_MASK ) == USB_REQ_RECIP_DEVICE )
+     ae6:	01faf793          	andi	a5,s5,31
+     aea:	c3b1                	beqz	a5,b2e <USBFS_IRQHandler+0x5e2>
+						else if( ( USBFS_SetupReqType & USB_REQ_RECIP_MASK ) == USB_REQ_RECIP_ENDP )
+     aec:	4709                	li	a4,2
+     aee:	e2e792e3          	bne	a5,a4,912 <USBFS_IRQHandler+0x3c6>
+							if( ep < FUSB_CONFIG_EPS )
+     af2:	00cc7793          	andi	a5,s8,12
+     af6:	e0079ee3          	bnez	a5,912 <USBFS_IRQHandler+0x3c6>
+								if( USBFS_SetupReqIndex & DEF_UEP_IN && ctx->endpoint_mode[ep] == -1 ) ctrl0buff[0] = ( UEP_CTRL_TX(ep) & USBFS_UEP_T_RES_MASK ) == USBFS_UEP_T_RES_STALL;
+     afa:	080bf713          	andi	a4,s7,128
+     afe:	e0070ae3          	beqz	a4,912 <USBFS_IRQHandler+0x3c6>
+     b02:	04440793          	addi	a5,s0,68
+     b06:	078a                	slli	a5,a5,0x2
+     b08:	97a6                	add	a5,a5,s1
+     b0a:	4398                	lw	a4,0(a5)
+     b0c:	57fd                	li	a5,-1
+     b0e:	e0f712e3          	bne	a4,a5,912 <USBFS_IRQHandler+0x3c6>
+     b12:	400237b7          	lui	a5,0x40023
+     b16:	42278793          	addi	a5,a5,1058 # 40023422 <_eusrstack+0x2001e422>
+     b1a:	040a                	slli	s0,s0,0x2
+     b1c:	943e                	add	s0,s0,a5
+     b1e:	00045783          	lhu	a5,0(s0)
+     b22:	8b8d                	andi	a5,a5,3
+     b24:	17f5                	addi	a5,a5,-3
+     b26:	0017b793          	seqz	a5,a5
+     b2a:	00f48823          	sb	a5,16(s1)
+						if( USBFS_SetupReqLen > 2 )
+     b2e:	4789                	li	a5,2
+     b30:	eb67dee3          	bge	a5,s6,9ec <USBFS_IRQHandler+0x4a0>
+     b34:	89be                	mv	s3,a5
+     b36:	bd5d                	j	9ec <USBFS_IRQHandler+0x4a0>
+					if( USBFS_SetupReqLen == 0 )
+     b38:	400237b7          	lui	a5,0x40023
+     b3c:	42278793          	addi	a5,a5,1058 # 40023422 <_eusrstack+0x2001e422>
+						UEP_CTRL_TX(0) = CHECK_USBFS_UEP_T_AUTO_TOG | USBFS_UEP_R_RES_ACK | USBFS_UEP_R_TOG;
+     b40:	09000713          	li	a4,144
+					if( USBFS_SetupReqLen == 0 )
+     b44:	00099863          	bnez	s3,b54 <USBFS_IRQHandler+0x608>
+						UEP_CTRL_LEN(0) = 0;
+     b48:	40023737          	lui	a4,0x40023
+     b4c:	42071023          	sh	zero,1056(a4) # 40023420 <_eusrstack+0x2001e420>
+						UEP_CTRL_TX(0) = USBFS_UEP_T_RES_ACK | USBFS_UEP_T_TOG;
+     b50:	04000713          	li	a4,64
+						UEP_CTRL_TX(0) = CHECK_USBFS_UEP_T_AUTO_TOG | USBFS_UEP_R_RES_ACK | USBFS_UEP_R_TOG;
+     b54:	00e79023          	sh	a4,0(a5)
+     b58:	b461                	j	5e0 <USBFS_IRQHandler+0x94>
+	else if( intfgst & CRB_UIF_BUS_RST )
+     b5a:	001a7793          	andi	a5,s4,1
+     b5e:	c795                	beqz	a5,b8a <USBFS_IRQHandler+0x63e>
+		if( usb_debug ) printf("[USB] RESET\n");
+     b60:	c0c1c783          	lbu	a5,-1012(gp) # 20000008 <usb_debug>
+     b64:	c789                	beqz	a5,b6e <USBFS_IRQHandler+0x622>
+     b66:	6505                	lui	a0,0x1
+     b68:	32c50513          	addi	a0,a0,812 # 132c <language+0x84>
+     b6c:	246d                	jal	e16 <puts>
+		ctx->USBFS_DevConfig = 0;
+     b6e:	200017b7          	lui	a5,0x20001
+     b72:	c407a623          	sw	zero,-948(a5) # 20000c4c <USBFSCTX+0x8>
+		USBFS->DEV_ADDR = 0;
+     b76:	40023437          	lui	s0,0x40023
+     b7a:	400401a3          	sb	zero,1027(s0) # 40023403 <_eusrstack+0x2001e403>
+		USBFS_InternalFinishSetup();
+     b7e:	f16ff0ef          	jal	294 <USBFS_InternalFinishSetup>
+		USBFS->INT_FG = CRB_UIF_BUS_RST;
+     b82:	4785                	li	a5,1
+     b84:	40f40323          	sb	a5,1030(s0)
+     b88:	b48d                	j	5ea <USBFS_IRQHandler+0x9e>
+	else if( intfgst & CRB_UIF_SUSPEND )
+     b8a:	004a7793          	andi	a5,s4,4
+     b8e:	c3a1                	beqz	a5,bce <USBFS_IRQHandler+0x682>
+		if( usb_debug ) printf("[USB] SUSPEND\n");
+     b90:	c0c1c783          	lbu	a5,-1012(gp) # 20000008 <usb_debug>
+     b94:	c789                	beqz	a5,b9e <USBFS_IRQHandler+0x652>
+     b96:	6505                	lui	a0,0x1
+     b98:	33850513          	addi	a0,a0,824 # 1338 <language+0x90>
+     b9c:	2cad                	jal	e16 <puts>
+		USBFS->INT_FG = USBFS_UMS_SUSPEND;
+     b9e:	4791                	li	a5,4
+     ba0:	40023437          	lui	s0,0x40023
+     ba4:	40f40323          	sb	a5,1030(s0) # 40023406 <_eusrstack+0x2001e406>
+		Delay_Us(10);
+     ba8:	f94ff0ef          	jal	33c <DelaySysTick.constprop.0>
+		if( USBFS->MIS_ST & USBFS_UMS_SUSPEND )
+     bac:	40544683          	lbu	a3,1029(s0)
+			ctx->USBFS_DevSleepStatus |= 0x02;
+     bb0:	20001737          	lui	a4,0x20001
+     bb4:	c4470713          	addi	a4,a4,-956 # 20000c44 <USBFSCTX>
+		if( USBFS->MIS_ST & USBFS_UMS_SUSPEND )
+     bb8:	8a91                	andi	a3,a3,4
+			ctx->USBFS_DevSleepStatus |= 0x02;
+     bba:	00a74783          	lbu	a5,10(a4)
+		if( USBFS->MIS_ST & USBFS_UMS_SUSPEND )
+     bbe:	c691                	beqz	a3,bca <USBFS_IRQHandler+0x67e>
+			ctx->USBFS_DevSleepStatus |= 0x02;
+     bc0:	0027e793          	ori	a5,a5,2
+			ctx->USBFS_DevSleepStatus &= ~0x02;
+     bc4:	00f70523          	sb	a5,10(a4)
+     bc8:	b40d                	j	5ea <USBFS_IRQHandler+0x9e>
+     bca:	9bf5                	andi	a5,a5,-3
+     bcc:	bfe5                	j	bc4 <USBFS_IRQHandler+0x678>
+			USBFS->INT_FG = intfgst & 0xff;
+     bce:	400237b7          	lui	a5,0x40023
+     bd2:	0ffa7713          	zext.b	a4,s4
+     bd6:	40e78323          	sb	a4,1030(a5) # 40023406 <_eusrstack+0x2001e406>
+			if( usb_debug) printf("[USB] intfgst = %04x\n",intfgst);
+     bda:	c0c1c783          	lbu	a5,-1012(gp) # 20000008 <usb_debug>
+     bde:	a00786e3          	beqz	a5,5ea <USBFS_IRQHandler+0x9e>
+     be2:	6505                	lui	a0,0x1
+     be4:	85d2                	mv	a1,s4
+     be6:	34850513          	addi	a0,a0,840 # 1348 <language+0xa0>
+     bea:	22ed                	jal	dd4 <printf>
+}
+     bec:	bafd                	j	5ea <USBFS_IRQHandler+0x9e>
+
+00000bee <strlen>:
+	for (; *s; s++);
+     bee:	87aa                	mv	a5,a0
+     bf0:	0007c703          	lbu	a4,0(a5)
+     bf4:	e701                	bnez	a4,bfc <strlen+0xe>
+}
+     bf6:	40a78533          	sub	a0,a5,a0
+     bfa:	8082                	ret
+	for (; *s; s++);
+     bfc:	0785                	addi	a5,a5,1
+     bfe:	bfcd                	j	bf0 <strlen+0x2>
+
+00000c00 <mini_vpprintf>:
+{
+     c00:	7175                	addi	sp,sp,-144
+     c02:	c522                	sw	s0,136(sp)
+     c04:	d2e6                	sw	s9,100(sp)
+     c06:	c706                	sw	ra,140(sp)
+     c08:	c326                	sw	s1,132(sp)
+     c0a:	c14a                	sw	s2,128(sp)
+     c0c:	dece                	sw	s3,124(sp)
+     c0e:	dcd2                	sw	s4,120(sp)
+     c10:	dad6                	sw	s5,116(sp)
+     c12:	d8da                	sw	s6,112(sp)
+     c14:	d6de                	sw	s7,108(sp)
+     c16:	d4e2                	sw	s8,104(sp)
+     c18:	d0ea                	sw	s10,96(sp)
+     c1a:	ceee                	sw	s11,92(sp)
+     c1c:	8432                	mv	s0,a2
+     c1e:	8cb6                	mv	s9,a3
+	if(puts == (void*)0) {
+     c20:	e131                	bnez	a0,c64 <mini_vpprintf+0x64>
+		puts = _puts; buf = (void*)0;
+     c22:	4901                	li	s2,0
+     c24:	16a00493          	li	s1,362
+	int n = 0;
+     c28:	4981                	li	s3,0
+		if (ch!='%') {
+     c2a:	02500a93          	li	s5,37
+			if (ch == '0') pad_char = '0';
+     c2e:	03000a13          	li	s4,48
+			while (ch >= '0' && ch <= '9') {
+     c32:	4b25                	li	s6,9
+				pad_to = pad_to * 10 + (ch - '0');
+     c34:	4ba9                	li	s7,10
+	while ((ch=*(fmt++))) {
+     c36:	00044783          	lbu	a5,0(s0)
+     c3a:	00140d13          	addi	s10,s0,1
+     c3e:	00f10fa3          	sb	a5,31(sp)
+     c42:	e785                	bnez	a5,c6a <mini_vpprintf+0x6a>
+}
+     c44:	40ba                	lw	ra,140(sp)
+     c46:	442a                	lw	s0,136(sp)
+     c48:	449a                	lw	s1,132(sp)
+     c4a:	490a                	lw	s2,128(sp)
+     c4c:	5a66                	lw	s4,120(sp)
+     c4e:	5ad6                	lw	s5,116(sp)
+     c50:	5b46                	lw	s6,112(sp)
+     c52:	5bb6                	lw	s7,108(sp)
+     c54:	5c26                	lw	s8,104(sp)
+     c56:	5c96                	lw	s9,100(sp)
+     c58:	5d06                	lw	s10,96(sp)
+     c5a:	4df6                	lw	s11,92(sp)
+     c5c:	854e                	mv	a0,s3
+     c5e:	59f6                	lw	s3,124(sp)
+     c60:	6149                	addi	sp,sp,144
+     c62:	8082                	ret
+     c64:	84aa                	mv	s1,a0
+     c66:	892e                	mv	s2,a1
+     c68:	b7c1                	j	c28 <mini_vpprintf+0x28>
+		if (ch!='%') {
+     c6a:	01578c63          	beq	a5,s5,c82 <mini_vpprintf+0x82>
+			len = puts(&ch, len, buf);
+     c6e:	864a                	mv	a2,s2
+     c70:	4585                	li	a1,1
+     c72:	01f10513          	addi	a0,sp,31
+     c76:	9482                	jalr	s1
+     c78:	8c66                	mv	s8,s9
+	while ((ch=*(fmt++))) {
+     c7a:	846a                	mv	s0,s10
+		n = n + len;
+     c7c:	99aa                	add	s3,s3,a0
+     c7e:	8ce2                	mv	s9,s8
+     c80:	bf5d                	j	c36 <mini_vpprintf+0x36>
+			ch=*(fmt++);
+     c82:	00144703          	lbu	a4,1(s0)
+     c86:	00240793          	addi	a5,s0,2
+			if (ch == '0') pad_char = '0';
+     c8a:	8d52                	mv	s10,s4
+			ch=*(fmt++);
+     c8c:	00e10fa3          	sb	a4,31(sp)
+			if (ch == '0') pad_char = '0';
+     c90:	07471e63          	bne	a4,s4,d0c <mini_vpprintf+0x10c>
+				ch=*(fmt++);
+     c94:	843e                	mv	s0,a5
+     c96:	4681                	li	a3,0
+     c98:	4781                	li	a5,0
+     c9a:	a801                	j	caa <mini_vpprintf+0xaa>
+				pad_to = pad_to * 10 + (ch - '0');
+     c9c:	037787b3          	mul	a5,a5,s7
+				ch=*(fmt++);
+     ca0:	00044703          	lbu	a4,0(s0)
+     ca4:	0405                	addi	s0,s0,1
+     ca6:	4685                	li	a3,1
+				pad_to = pad_to * 10 + (ch - '0');
+     ca8:	97b2                	add	a5,a5,a2
+			while (ch >= '0' && ch <= '9') {
+     caa:	fd070613          	addi	a2,a4,-48
+     cae:	0ff67593          	zext.b	a1,a2
+     cb2:	febb75e3          	bgeu	s6,a1,c9c <mini_vpprintf+0x9c>
+     cb6:	c299                	beqz	a3,cbc <mini_vpprintf+0xbc>
+     cb8:	00e10fa3          	sb	a4,31(sp)
+			if(pad_to > (signed int) sizeof(bf)) {
+     cbc:	46e1                	li	a3,24
+     cbe:	8dbe                	mv	s11,a5
+     cc0:	00f6d363          	bge	a3,a5,cc6 <mini_vpprintf+0xc6>
+     cc4:	8db6                	mv	s11,a3
+			if (ch == 'l') {
+     cc6:	06c00693          	li	a3,108
+			char l = 0;
+     cca:	4601                	li	a2,0
+			if (ch == 'l') {
+     ccc:	00d71863          	bne	a4,a3,cdc <mini_vpprintf+0xdc>
+				ch=*(fmt++);
+     cd0:	00044703          	lbu	a4,0(s0)
+				l = 1;
+     cd4:	4605                	li	a2,1
+				ch=*(fmt++);
+     cd6:	0405                	addi	s0,s0,1
+     cd8:	00e10fa3          	sb	a4,31(sp)
+			switch (ch) {
+     cdc:	01f14683          	lbu	a3,31(sp)
+     ce0:	06400713          	li	a4,100
+     ce4:	06e68363          	beq	a3,a4,d4a <mini_vpprintf+0x14a>
+     ce8:	02d76563          	bltu	a4,a3,d12 <mini_vpprintf+0x112>
+     cec:	05800793          	li	a5,88
+     cf0:	0af68063          	beq	a3,a5,d90 <mini_vpprintf+0x190>
+     cf4:	06300793          	li	a5,99
+     cf8:	0af68e63          	beq	a3,a5,db4 <mini_vpprintf+0x1b4>
+     cfc:	d6a1                	beqz	a3,c44 <mini_vpprintf+0x44>
+					len = puts(&ch, len, buf);
+     cfe:	864a                	mv	a2,s2
+     d00:	4585                	li	a1,1
+     d02:	01f10513          	addi	a0,sp,31
+     d06:	9482                	jalr	s1
+					break;
+     d08:	8c66                	mv	s8,s9
+     d0a:	bf8d                	j	c7c <mini_vpprintf+0x7c>
+			char pad_char = ' ';
+     d0c:	02000d13          	li	s10,32
+     d10:	b751                	j	c94 <mini_vpprintf+0x94>
+			switch (ch) {
+     d12:	07500713          	li	a4,117
+     d16:	02e68a63          	beq	a3,a4,d4a <mini_vpprintf+0x14a>
+     d1a:	07800713          	li	a4,120
+     d1e:	06e68963          	beq	a3,a4,d90 <mini_vpprintf+0x190>
+     d22:	07300713          	li	a4,115
+     d26:	fce69ce3          	bne	a3,a4,cfe <mini_vpprintf+0xfe>
+					ptr = va_arg(va, char*);
+     d2a:	004c8c13          	addi	s8,s9,4
+     d2e:	000cac83          	lw	s9,0(s9)
+     d32:	c63e                	sw	a5,12(sp)
+					len = mini_strlen(ptr);
+     d34:	8566                	mv	a0,s9
+     d36:	3d65                	jal	bee <strlen>
+					if (pad_to > 0) {
+     d38:	47b2                	lw	a5,12(sp)
+					len = mini_strlen(ptr);
+     d3a:	85aa                	mv	a1,a0
+					if (pad_to > 0) {
+     d3c:	08f05963          	blez	a5,dce <mini_vpprintf+0x1ce>
+						len = mini_pad(ptr, len, pad_char, pad_to, bf);
+     d40:	1838                	addi	a4,sp,56
+     d42:	86ee                	mv	a3,s11
+     d44:	866a                	mv	a2,s10
+     d46:	8566                	mv	a0,s9
+     d48:	a025                	j	d70 <mini_vpprintf+0x170>
+						len = mini_itoa(va_arg(va, unsigned long), 10, 0, (ch=='u'), bf2);
+     d4a:	004c8c13          	addi	s8,s9,4
+					if(l) {
+     d4e:	ca05                	beqz	a2,d7e <mini_vpprintf+0x17e>
+						len = mini_itoa(va_arg(va, unsigned long), 10, 0, (ch=='u'), bf2);
+     d50:	f8b68693          	addi	a3,a3,-117
+     d54:	1018                	addi	a4,sp,32
+     d56:	0016b693          	seqz	a3,a3
+     d5a:	000ca503          	lw	a0,0(s9)
+     d5e:	4601                	li	a2,0
+     d60:	45a9                	li	a1,10
+     d62:	ca2ff0ef          	jal	204 <mini_itoa.part.0>
+					len = mini_pad(bf2, len, pad_char, pad_to, bf);
+     d66:	1838                	addi	a4,sp,56
+     d68:	86ee                	mv	a3,s11
+     d6a:	866a                	mv	a2,s10
+     d6c:	85aa                	mv	a1,a0
+					len = mini_pad(bf2, len, pad_char, pad_to, bf);
+     d6e:	1008                	addi	a0,sp,32
+     d70:	b70ff0ef          	jal	e0 <mini_pad>
+     d74:	85aa                	mv	a1,a0
+					len = puts(bf, len, buf);
+     d76:	864a                	mv	a2,s2
+     d78:	1828                	addi	a0,sp,56
+     d7a:	9482                	jalr	s1
+					break;
+     d7c:	b701                	j	c7c <mini_vpprintf+0x7c>
+						if(ch == 'u') {
+     d7e:	07500793          	li	a5,117
+     d82:	1018                	addi	a4,sp,32
+     d84:	00f69463          	bne	a3,a5,d8c <mini_vpprintf+0x18c>
+	if (radix > 16)
+     d88:	4685                	li	a3,1
+     d8a:	bfc1                	j	d5a <mini_vpprintf+0x15a>
+     d8c:	4681                	li	a3,0
+     d8e:	b7f1                	j	d5a <mini_vpprintf+0x15a>
+					if(l) {
+     d90:	000ca503          	lw	a0,0(s9)
+						len = mini_itoa(va_arg(va, unsigned long), 16, (ch=='X'), 1, bf2);
+     d94:	fa868613          	addi	a2,a3,-88
+     d98:	1018                	addi	a4,sp,32
+     d9a:	4685                	li	a3,1
+     d9c:	00163613          	seqz	a2,a2
+     da0:	45c1                	li	a1,16
+     da2:	c62ff0ef          	jal	204 <mini_itoa.part.0>
+						len = mini_itoa(va_arg(va, unsigned long), 10, 0, (ch=='u'), bf2);
+     da6:	004c8c13          	addi	s8,s9,4
+	if (radix > 16)
+     daa:	85aa                	mv	a1,a0
+					len = mini_pad(bf2, len, pad_char, pad_to, bf);
+     dac:	1838                	addi	a4,sp,56
+     dae:	86ee                	mv	a3,s11
+     db0:	866a                	mv	a2,s10
+     db2:	bf75                	j	d6e <mini_vpprintf+0x16e>
+					ch = (char)(va_arg(va, int));
+     db4:	000ca783          	lw	a5,0(s9)
+     db8:	004c8c13          	addi	s8,s9,4
+					len = mini_pad(&ch, 1, pad_char, pad_to, bf);
+     dbc:	1838                	addi	a4,sp,56
+					ch = (char)(va_arg(va, int));
+     dbe:	00f10fa3          	sb	a5,31(sp)
+					len = mini_pad(&ch, 1, pad_char, pad_to, bf);
+     dc2:	86ee                	mv	a3,s11
+     dc4:	866a                	mv	a2,s10
+     dc6:	4585                	li	a1,1
+     dc8:	01f10513          	addi	a0,sp,31
+     dcc:	b755                	j	d70 <mini_vpprintf+0x170>
+						len = puts(ptr, len, buf);
+     dce:	864a                	mv	a2,s2
+     dd0:	8566                	mv	a0,s9
+     dd2:	b765                	j	d7a <mini_vpprintf+0x17a>
+
+00000dd4 <printf>:
+{
+     dd4:	7139                	addi	sp,sp,-64
+     dd6:	d432                	sw	a2,40(sp)
+	int ret_status = mini_vpprintf(__puts_uart, 0, format, args);
+     dd8:	862a                	mv	a2,a0
+{
+     dda:	d22e                	sw	a1,36(sp)
+     ddc:	d636                	sw	a3,44(sp)
+	int ret_status = mini_vpprintf(__puts_uart, 0, format, args);
+     dde:	4581                	li	a1,0
+	va_start( args, format );
+     de0:	1054                	addi	a3,sp,36
+	int ret_status = mini_vpprintf(__puts_uart, 0, format, args);
+     de2:	46400513          	li	a0,1124
+{
+     de6:	ce06                	sw	ra,28(sp)
+     de8:	d83a                	sw	a4,48(sp)
+     dea:	da3e                	sw	a5,52(sp)
+     dec:	dc42                	sw	a6,56(sp)
+     dee:	de46                	sw	a7,60(sp)
+	va_start( args, format );
+     df0:	c636                	sw	a3,12(sp)
+	int ret_status = mini_vpprintf(__puts_uart, 0, format, args);
+     df2:	3539                	jal	c00 <mini_vpprintf>
+}
+     df4:	40f2                	lw	ra,28(sp)
+     df6:	6121                	addi	sp,sp,64
+     df8:	8082                	ret
+
+00000dfa <memcpy>:
+	for (; n; n--) *d++ = *s++;
+     dfa:	4781                	li	a5,0
+     dfc:	00f61363          	bne	a2,a5,e02 <memcpy+0x8>
+}
+     e00:	8082                	ret
+	for (; n; n--) *d++ = *s++;
+     e02:	00f58733          	add	a4,a1,a5
+     e06:	00074683          	lbu	a3,0(a4)
+     e0a:	00f50733          	add	a4,a0,a5
+     e0e:	0785                	addi	a5,a5,1
+     e10:	00d70023          	sb	a3,0(a4)
+     e14:	b7e5                	j	dfc <memcpy+0x2>
+
+00000e16 <puts>:
+{
+     e16:	1141                	addi	sp,sp,-16
+     e18:	c606                	sw	ra,12(sp)
+     e1a:	c422                	sw	s0,8(sp)
+     e1c:	c226                	sw	s1,4(sp)
+     e1e:	84aa                	mv	s1,a0
+	int sl = strlen( s );
+     e20:	33f9                	jal	bee <strlen>
+     e22:	842a                	mv	s0,a0
+	_write(0, s, sl );
+     e24:	85aa                	mv	a1,a0
+     e26:	8526                	mv	a0,s1
+     e28:	d50ff0ef          	jal	378 <_write.constprop.0>
+	_write(0, "\n", 1 );
+     e2c:	6505                	lui	a0,0x1
+     e2e:	4585                	li	a1,1
+     e30:	30050513          	addi	a0,a0,768 # 1300 <language+0x58>
+     e34:	d44ff0ef          	jal	378 <_write.constprop.0>
+}
+     e38:	40b2                	lw	ra,12(sp)
+     e3a:	00140513          	addi	a0,s0,1
+     e3e:	4422                	lw	s0,8(sp)
+     e40:	4492                	lw	s1,4(sp)
+     e42:	0141                	addi	sp,sp,16
+     e44:	8082                	ret
+
+00000e46 <SystemInit>:
+		FLASH->ACTLR = FLASH_ACTLR_LATENCY_1;
+	#else
+		FLASH->ACTLR = FLASH_ACTLR_LATENCY_0;
+	#endif
+#elif defined(CH32X03x)
+	FLASH->ACTLR = FLASH_ACTLR_LATENCY_2;                   // +2 Cycle Latency (Recommended per TRM)
+     e46:	400227b7          	lui	a5,0x40022
+     e4a:	4709                	li	a4,2
+     e4c:	c398                	sw	a4,0(a5)
+	#endif
+	#if defined(FUNCONF_USE_PLL) && FUNCONF_USE_PLL
+		RCC->CFGR0 = BASE_CFGR0;
+		RCC->CTLR  = BASE_CTLR | RCC_HSION | RCC_PLLON; 			// Use HSI, enable PLL.
+	#else
+		RCC->CFGR0 = RCC_HPRE_DIV1;                               	// PLLCLK = HCLK = SYSCLK = APB1
+     e4e:	400217b7          	lui	a5,0x40021
+		RCC->CTLR  = BASE_CTLR | RCC_HSION;     					// Use HSI, Only.
+     e52:	00080737          	lui	a4,0x80
+		RCC->CFGR0 = RCC_HPRE_DIV1;                               	// PLLCLK = HCLK = SYSCLK = APB1
+     e56:	0007a223          	sw	zero,4(a5) # 40021004 <_eusrstack+0x2001c004>
+		RCC->CTLR  = BASE_CTLR | RCC_HSION;     					// Use HSI, Only.
+     e5a:	08170713          	addi	a4,a4,129 # 80081 <usbfs_cdc_uart.c.5b8701b2+0x7d810>
+     e5e:	c398                	sw	a4,0(a5)
+		FLASH->ACTLR = FLASH_ACTLR_LATENCY_0;
+	#endif
+#endif
+
+#ifndef CH5xx
+	RCC->INTR  = 0x009F0000;                               // Clear PLL, CSSC, HSE, HSI and LSI ready flags.
+     e60:	009f0737          	lui	a4,0x9f0
+     e64:	c798                	sw	a4,8(a5)
+	*DMDATA1 = 0x00;
+     e66:	e00007b7          	lui	a5,0xe0000
+     e6a:	3807a223          	sw	zero,900(a5) # e0000384 <_eusrstack+0xbfffb384>
+	*DMDATA0 = 0x80;
+     e6e:	08000713          	li	a4,128
+     e72:	38e7a023          	sw	a4,896(a5)
+	SetupDebugPrintf();
+#endif
+#if defined(FUNCONF_SUPPORT_CONSTRUCTORS) && FUNCONF_SUPPORT_CONSTRUCTORS
+	CallConstructors();
+#endif
+}
+     e76:	8082                	ret
+
+00000e78 <main>:
+		NVIC_EnableIRQ(USB_IRQn);
+	}
+}
+
+int main()
+{
+     e78:	7139                	addi	sp,sp,-64
+     e7a:	de06                	sw	ra,60(sp)
+     e7c:	dc22                	sw	s0,56(sp)
+     e7e:	da26                	sw	s1,52(sp)
+     e80:	d84a                	sw	s2,48(sp)
+     e82:	d64e                	sw	s3,44(sp)
+     e84:	d452                	sw	s4,40(sp)
+     e86:	d256                	sw	s5,36(sp)
+     e88:	d05a                	sw	s6,32(sp)
+     e8a:	ce5e                	sw	s7,28(sp)
+     e8c:	cc62                	sw	s8,24(sp)
+     e8e:	ca66                	sw	s9,20(sp)
+     e90:	c86a                	sw	s10,16(sp)
+     e92:	c66e                	sw	s11,12(sp)
+	SystemInit();
+     e94:	3f4d                	jal	e46 <SystemInit>
+	SysTick->CTLR = 0;
+     e96:	e000f7b7          	lui	a5,0xe000f
+	SysTick->CMP = DELAY_MS_TIME - 1;
+     e9a:	6631                	lui	a2,0xc
+	SysTick->CTLR = 0;
+     e9c:	0007a023          	sw	zero,0(a5) # e000f000 <_eusrstack+0xc000a000>
+	SysTick->CMP = DELAY_MS_TIME - 1;
+     ea0:	b7f60613          	addi	a2,a2,-1153 # bb7f <usbfs_cdc_uart.c.5b8701b2+0x930e>
+     ea4:	cb90                	sw	a2,16(a5)
+     ea6:	4681                	li	a3,0
+     ea8:	cbd4                	sw	a3,20(a5)
+	SysTick->CNT = 0;
+     eaa:	4601                	li	a2,0
+     eac:	c790                	sw	a2,8(a5)
+     eae:	4681                	li	a3,0
+     eb0:	c7d4                	sw	a3,12(a5)
+	SysTick->CTLR |= SYSTICK_CTLR_STE |  // Enable Counter
+     eb2:	4398                	lw	a4,0(a5)
+	cdc.rx_timeout = 0;
+     eb4:	20001437          	lui	s0,0x20001
+	SysTick->CTLR |= SYSTICK_CTLR_STE |  // Enable Counter
+     eb8:	00776713          	ori	a4,a4,7
+     ebc:	c398                	sw	a4,0(a5)
+	millis_cnt = 0;
+     ebe:	c0c1a223          	sw	a2,-1020(gp) # 20000000 <millis_cnt>
+	cdc.rx_timeout = 0;
+     ec2:	c0c40713          	addi	a4,s0,-1012 # 20000c0c <cdc>
+     ec6:	02072023          	sw	zero,32(a4) # 9f0020 <usbfs_cdc_uart.c.5b8701b2+0x9ed7af>
+	cdc.usb_timeout = 0;
+     eca:	00072623          	sw	zero,12(a4)
+	millis_cnt = 0;
+     ece:	c0d1a423          	sw	a3,-1016(gp) # 20000004 <millis_cnt+0x4>
+	NVIC->IENR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
+     ed2:	e000e937          	lui	s2,0xe000e
+     ed6:	6785                	lui	a5,0x1
+     ed8:	10f92023          	sw	a5,256(s2) # e000e100 <_eusrstack+0xc0009100>
+	systick_init();
+
+	funGpioInitAll();
+     edc:	400217b7          	lui	a5,0x40021
+     ee0:	4f94                	lw	a3,24(a5)
+
+CDC_config_t cdc;
+
+void cdc_init(CDC_config_t * ctx) 
+{
+	cdc.tx_wrap_pos = UART_TX_BUF_SIZE;
+     ee2:	40000c13          	li	s8,1024
+	cdc.cdc_cfg[4] = UART_DEFAULT_STOPB;
+	cdc.cdc_cfg[5] = UART_DEFAULT_PARITY;
+	cdc.cdc_cfg[6] = 8;
+	cdc.cdc_cfg[7] = UART_RX_TIMEOUT * 10;
+
+	USBFS->UEP2_DMA = (uintptr_t)uart_tx_buffer;
+     ee6:	20001a37          	lui	s4,0x20001
+     eea:	01d6e693          	ori	a3,a3,29
+     eee:	cf94                	sw	a3,24(a5)
+	RCC->AHBPCENR = RCC_AHBPeriph_SRAM | RCC_AHBPeriph_DMA1;
+     ef0:	4695                	li	a3,5
+     ef2:	cbd4                	sw	a3,20(a5)
+	cdc.cdc_cfg[0] = (uint8_t)(UART_DEFALT_BAUD);
+     ef4:	66f1                	lui	a3,0x1c
+     ef6:	20068693          	addi	a3,a3,512 # 1c200 <usbfs_cdc_uart.c.5b8701b2+0x1998f>
+     efa:	c354                	sw	a3,4(a4)
+	USBFS->UEP2_DMA = (uintptr_t)uart_tx_buffer;
+     efc:	400234b7          	lui	s1,0x40023
+	cdc.cdc_cfg[4] = UART_DEFAULT_STOPB;
+     f00:	1e0806b7          	lui	a3,0x1e080
+     f04:	c714                	sw	a3,8(a4)
+	cdc.tx_wrap_pos = UART_TX_BUF_SIZE;
+     f06:	03872823          	sw	s8,48(a4)
+	USBFS->UEP2_DMA = (uintptr_t)uart_tx_buffer;
+     f0a:	94e2                	add	s1,s1,s8
+     f0c:	80ca0a13          	addi	s4,s4,-2036 # 2000080c <uart_tx_buffer>
+     f10:	0144ac23          	sw	s4,24(s1) # 40023018 <_eusrstack+0x2001e018>
+	RCC->APB2PCENR |= RCC_APB2Periph_AFIO | RCC_APB2Periph_GPIOC;
+     f14:	4f98                	lw	a4,24(a5)
+	AFIO->CTLR = (AFIO->CTLR & ~(UDP_PUE_MASK | UDM_PUE_MASK )) | USB_PHY_V33 | UDP_PUE_1K5 | USB_IOEN;
+     f16:	400106b7          	lui	a3,0x40010
+     f1a:	6989                	lui	s3,0x2
+	RCC->APB2PCENR |= RCC_APB2Periph_AFIO | RCC_APB2Periph_GPIOC;
+     f1c:	01176713          	ori	a4,a4,17
+     f20:	cf98                	sw	a4,24(a5)
+	AFIO->CTLR = (AFIO->CTLR & ~(UDP_PUE_MASK | UDM_PUE_MASK )) | USB_PHY_V33 | UDP_PUE_1K5 | USB_IOEN;
+     f22:	4e98                	lw	a4,24(a3)
+     f24:	40011bb7          	lui	s7,0x40011
+
+	UEP_DMA(2) = (uintptr_t)uart_tx_buffer;
+
+	int last_delay = millis_cnt;
+	funPinMode( PA9,     GPIO_CFGLR_OUT_10Mhz_PP ); // Set PIN_1 to output
+	int state_led = 0;
+     f28:	4d81                	li	s11,0
+     f2a:	f3077713          	andi	a4,a4,-208
+     f2e:	0cc76713          	ori	a4,a4,204
+     f32:	ce98                	sw	a4,24(a3)
+	GPIOC->CFGXR = 	( GPIOC->CFGXR & ~( (0xf<<(4*0)) | (0xf<<(4*1)) ) )  |
+     f34:	400116b7          	lui	a3,0x40011
+     f38:	4ed8                	lw	a4,28(a3)
+     f3a:	c0c40413          	addi	s0,s0,-1012
+     f3e:	800b8b93          	addi	s7,s7,-2048 # 40010800 <_eusrstack+0x2000b800>
+     f42:	f0077713          	andi	a4,a4,-256
+     f46:	08476713          	ori	a4,a4,132
+     f4a:	ced8                	sw	a4,28(a3)
+	GPIOC->BSXR = 1<<1; // PC17 on.
+     f4c:	4709                	li	a4,2
+     f4e:	d298                	sw	a4,32(a3)
+	RCC->AHBPCENR |= RCC_USBFS | RCC_AHBPeriph_DMA1;
+     f50:	4bd8                	lw	a4,20(a5)
+     f52:	6685                	lui	a3,0x1
+     f54:	0685                	addi	a3,a3,1 # 1001 <main+0x189>
+     f56:	8f55                	or	a4,a4,a3
+     f58:	cbd8                	sw	a4,20(a5)
+	USBFS->BASE_CTRL = USBFS_UC_RESET_SIE | USBFS_UC_CLR_ALL;
+     f5a:	4799                	li	a5,6
+     f5c:	00f48023          	sb	a5,0(s1)
+	USBFS->BASE_CTRL = 0x00;
+     f60:	00048023          	sb	zero,0(s1)
+	Delay_Us(10);
+     f64:	bd8ff0ef          	jal	33c <DelaySysTick.constprop.0>
+	USBFS->INT_EN    = USBFS_UIE_SUSPEND | USBFS_UIE_TRANSFER | USBFS_UIE_BUS_RST;
+     f68:	479d                	li	a5,7
+     f6a:	00f48123          	sb	a5,2(s1)
+	USBFS->DEV_ADDR  = 0x00;
+     f6e:	000481a3          	sb	zero,3(s1)
+	USBFS->BASE_CTRL = USBFS_UC_INT_BUSY | USBFS_UC_DMA_EN | USBFS_UC_DEV_PU_EN;
+     f72:	02900793          	li	a5,41
+     f76:	00f48023          	sb	a5,0(s1)
+	USBFS->INT_FG    = 0xff;
+     f7a:	57fd                	li	a5,-1
+     f7c:	00f48323          	sb	a5,6(s1)
+	USBFS_InternalFinishSetup();
+     f80:	b14ff0ef          	jal	294 <USBFS_InternalFinishSetup>
+	USBFS->UDEV_CTRL = USBFS_UD_PD_DIS | USBFS_UD_PORT_EN;
+     f84:	f8100793          	li	a5,-127
+     f88:	00f480a3          	sb	a5,1(s1)
+     f8c:	11392223          	sw	s3,260(s2)
+	UEP_DMA(2) = (uintptr_t)uart_tx_buffer;
+     f90:	400237b7          	lui	a5,0x40023
+	funPinMode( PA9,     GPIO_CFGLR_OUT_10Mhz_PP ); // Set PIN_1 to output
+     f94:	40011737          	lui	a4,0x40011
+	UEP_DMA(2) = (uintptr_t)uart_tx_buffer;
+     f98:	4147ac23          	sw	s4,1048(a5) # 40023418 <_eusrstack+0x2001e418>
+	funPinMode( PA9,     GPIO_CFGLR_OUT_10Mhz_PP ); // Set PIN_1 to output
+     f9c:	80470713          	addi	a4,a4,-2044 # 40010804 <_eusrstack+0x2000b804>
+	int last_delay = millis_cnt;
+     fa0:	c041aa03          	lw	s4,-1020(gp) # 20000000 <millis_cnt>
+     fa4:	c081aa83          	lw	s5,-1016(gp) # 20000004 <millis_cnt+0x4>
+	funPinMode( PA9,     GPIO_CFGLR_OUT_10Mhz_PP ); // Set PIN_1 to output
+     fa8:	431c                	lw	a5,0(a4)
+	if((len+cdc.rx_remain) < UART_RX_BUF_SIZE)
+     faa:	7ff00c93          	li	s9,2047
+		uint8_t *buf_empty_part = (uint8_t*)(uart_rx_buffer + cdc.rx_pos+cdc.rx_remain);
+     fae:	20000d37          	lui	s10,0x20000
+	funPinMode( PA9,     GPIO_CFGLR_OUT_10Mhz_PP ); // Set PIN_1 to output
+     fb2:	f0f7f793          	andi	a5,a5,-241
+     fb6:	0107e793          	ori	a5,a5,16
+     fba:	c31c                	sw	a5,0(a4)
+
+	while(1)
+	{
+		if((millis_cnt - last_delay) > 1000)
+     fbc:	c041a503          	lw	a0,-1020(gp) # 20000000 <millis_cnt>
+     fc0:	c081a583          	lw	a1,-1016(gp) # 20000004 <millis_cnt+0x4>
+     fc4:	41fa5793          	srai	a5,s4,0x1f
+     fc8:	41450733          	sub	a4,a0,s4
+     fcc:	00e53633          	sltu	a2,a0,a4
+     fd0:	40f587b3          	sub	a5,a1,a5
+     fd4:	00c79663          	bne	a5,a2,fe0 <main+0x168>
+     fd8:	3e800793          	li	a5,1000
+     fdc:	04e7f563          	bgeu	a5,a4,1026 <main+0x1ae>
+		{
+			last_delay = millis_cnt;
+     fe0:	c041aa03          	lw	s4,-1020(gp) # 20000000 <millis_cnt>
+     fe4:	c081aa83          	lw	s5,-1016(gp) # 20000004 <millis_cnt+0x4>
+			// GPIO_InverseBits(1);
+			if (state_led == 0)
+     fe8:	1c0d9c63          	bnez	s11,11c0 <main+0x348>
+			{
+				state_led = 1;
+				funDigitalWrite( PA9,     FUN_HIGH );
+     fec:	20000793          	li	a5,512
+     ff0:	00fba823          	sw	a5,16(s7)
+				state_led = 1;
+     ff4:	4d85                	li	s11,1
+	if((len+cdc.rx_remain) < UART_RX_BUF_SIZE)
+     ff6:	4c1c                	lw	a5,24(s0)
+     ff8:	079d                	addi	a5,a5,7
+     ffa:	02fce663          	bltu	s9,a5,1026 <main+0x1ae>
+	NVIC->IRER[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
+     ffe:	19392223          	sw	s3,388(s2)
+		uint8_t *buf_empty_part = (uint8_t*)(uart_rx_buffer + cdc.rx_pos+cdc.rx_remain);
+    1002:	4c1c                	lw	a5,24(s0)
+    1004:	4858                	lw	a4,20(s0)
+    1006:	00cd0513          	addi	a0,s10,12 # 2000000c <uart_rx_buffer>
+		memcpy(buf_empty_part, data, len);
+    100a:	6585                	lui	a1,0x1
+		uint8_t *buf_empty_part = (uint8_t*)(uart_rx_buffer + cdc.rx_pos+cdc.rx_remain);
+    100c:	97ba                	add	a5,a5,a4
+		cdc.rx_remain += len;
+    100e:	4c18                	lw	a4,24(s0)
+		memcpy(buf_empty_part, data, len);
+    1010:	461d                	li	a2,7
+    1012:	2ac58593          	addi	a1,a1,684 # 12ac <language+0x4>
+		cdc.rx_remain += len;
+    1016:	071d                	addi	a4,a4,7
+		memcpy(buf_empty_part, data, len);
+    1018:	953e                	add	a0,a0,a5
+		cdc.rx_remain += len;
+    101a:	cc18                	sw	a4,24(s0)
+		cdc.rx_timeout = 0;
+    101c:	02042023          	sw	zero,32(s0)
+		memcpy(buf_empty_part, data, len);
+    1020:	3be9                	jal	dfa <memcpy>
+	NVIC->IENR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
+    1022:	11392223          	sw	s3,260(s2)
+	//i jak są dane odebrane to są dopisywane do bufora i tx_remain aktualizowane
+	//gdyby dane tu nie były odbierane to gdy bufor by się przepełnił
+	//to po USB wysłane byłoby NAK
+	
+	//Są jakieś dane w buforze odebrane przez USB, i pasuje coś z nimi zrobić
+	if (ctx->txing) 
+    1026:	505c                	lw	a5,36(s0)
+    1028:	c3b1                	beqz	a5,106c <main+0x1f4>
+	NVIC->IRER[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
+    102a:	19392223          	sw	s3,388(s2)
+	{
+		//Nic nie robimy z tymi danymi tylk oodsyłamy ACK
+		//i przesuwamy się po buforze
+		NVIC_DisableIRQ(USB_IRQn);
+		ctx->tx_remain -= ctx->txing;
+    102e:	5458                	lw	a4,44(s0)
+    1030:	8f1d                	sub	a4,a4,a5
+    1032:	d458                	sw	a4,44(s0)
+		ctx->tx_pos += ctx->txing;
+    1034:	5418                	lw	a4,40(s0)
+    1036:	97ba                	add	a5,a5,a4
+		if( ctx->tx_pos & 0x3 ) ctx->tx_pos = (ctx->tx_pos + 4) & ~0x3;
+    1038:	0037f713          	andi	a4,a5,3
+    103c:	c319                	beqz	a4,1042 <main+0x1ca>
+    103e:	0791                	addi	a5,a5,4
+    1040:	9bf1                	andi	a5,a5,-4
+		ctx->tx_pos += ctx->txing;
+    1042:	d41c                	sw	a5,40(s0)
+		ctx->txing = 0;
+		if ((ctx->tx_stop) && (!ctx->tx_remain)) {
+    1044:	03444783          	lbu	a5,52(s0)
+		ctx->txing = 0;
+    1048:	02042223          	sw	zero,36(s0)
+		if ((ctx->tx_stop) && (!ctx->tx_remain)) {
+    104c:	cf91                	beqz	a5,1068 <main+0x1f0>
+    104e:	545c                	lw	a5,44(s0)
+    1050:	ef81                	bnez	a5,1068 <main+0x1f0>
+	else UEP_CTRL_TX(endp) = ( UEP_CTRL_TX(endp) & ~USBFS_UEP_R_RES_MASK ) | USBFS_UEP_R_RES_ACK;
+    1052:	400237b7          	lui	a5,0x40023
+    1056:	42a7d703          	lhu	a4,1066(a5) # 4002342a <_eusrstack+0x2001e42a>
+    105a:	66c1                	lui	a3,0x10
+    105c:	16cd                	addi	a3,a3,-13 # fff3 <usbfs_cdc_uart.c.5b8701b2+0xd782>
+    105e:	8f75                	and	a4,a4,a3
+    1060:	42e79523          	sh	a4,1066(a5)
+			USBFS_SendACK(2, 0);
+			ctx->tx_stop = 0;
+    1064:	02040a23          	sb	zero,52(s0)
+	NVIC->IENR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
+    1068:	11392223          	sw	s3,260(s2)
+		NVIC_EnableIRQ(USB_IRQn);
+	}
+
+	//Nie ma nowych danych odebranych przez USB, ale są jakieś wbuforze
+
+	if (ctx->txing == 0 && ctx->tx_remain) 
+    106c:	545c                	lw	a5,44(s0)
+    106e:	cb8d                	beqz	a5,10a0 <main+0x228>
+	NVIC->IRER[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
+    1070:	19392223          	sw	s3,388(s2)
+	{
+			NVIC_DisableIRQ(USB_IRQn);
+
+			if (ctx->tx_wrap_pos <= ctx->tx_pos) 
+    1074:	5818                	lw	a4,48(s0)
+    1076:	541c                	lw	a5,40(s0)
+    1078:	00e7e963          	bltu	a5,a4,108a <main+0x212>
+			{
+				ctx->tx_pos = 0; 
+    107c:	02042423          	sw	zero,40(s0)
+				ctx->tx_wrap_pos = UART_TX_BUF_SIZE;
+    1080:	03842823          	sw	s8,48(s0)
+    1084:	40000713          	li	a4,1024
+    1088:	4781                	li	a5,0
+			}
+
+			// UART_TX_DMA->MADDR = (uint32_t)(uart_tx_buffer + ctx->tx_pos);; // Set address for DMA to read from
+			uint32_t to_send = (ctx->tx_pos + ctx->tx_remain < ctx->tx_wrap_pos)?ctx->tx_remain:(ctx->tx_wrap_pos - ctx->tx_pos);
+    108a:	5454                	lw	a3,44(s0)
+    108c:	96be                	add	a3,a3,a5
+    108e:	40f707b3          	sub	a5,a4,a5
+    1092:	00e6f363          	bgeu	a3,a4,1098 <main+0x220>
+    1096:	545c                	lw	a5,44(s0)
+			
+			if (to_send == 0) return;
+    1098:	c781                	beqz	a5,10a0 <main+0x228>
+		
+			ctx->txing = to_send;
+    109a:	d05c                	sw	a5,36(s0)
+	NVIC->IENR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
+    109c:	11392223          	sw	s3,260(s2)
+	if (ctx->rx_remain) 
+    10a0:	4c1c                	lw	a5,24(s0)
+    10a2:	cfe9                	beqz	a5,117c <main+0x304>
+		if (ctx->rxing == 0) 
+    10a4:	01044783          	lbu	a5,16(s0)
+    10a8:	12079263          	bnez	a5,11cc <main+0x354>
+			if( ctx->rx_remain >= USBFS_PACKET_SIZE ) packlen = USBFS_PACKET_SIZE;
+    10ac:	4c14                	lw	a3,24(s0)
+    10ae:	03f00713          	li	a4,63
+    10b2:	04000793          	li	a5,64
+    10b6:	00d76863          	bltu	a4,a3,10c6 <main+0x24e>
+			else if (ctx->rx_timeout >= UART_RX_TIMEOUT) packlen = ctx->rx_remain;
+    10ba:	5014                	lw	a3,32(s0)
+    10bc:	4709                	li	a4,2
+	uint32_t packlen = 0;
+    10be:	4781                	li	a5,0
+			else if (ctx->rx_timeout >= UART_RX_TIMEOUT) packlen = ctx->rx_remain;
+    10c0:	00d77363          	bgeu	a4,a3,10c6 <main+0x24e>
+    10c4:	4c1c                	lw	a5,24(s0)
+			if (packlen > (UART_RX_BUF_SIZE - ctx->rx_pos)) packlen = (UART_RX_BUF_SIZE - ctx->rx_pos);
+    10c6:	4858                	lw	a4,20(s0)
+    10c8:	6485                	lui	s1,0x1
+    10ca:	80048493          	addi	s1,s1,-2048 # 800 <USBFS_IRQHandler+0x2b4>
+    10ce:	8c99                	sub	s1,s1,a4
+    10d0:	0097f363          	bgeu	a5,s1,10d6 <main+0x25e>
+    10d4:	84be                	mv	s1,a5
+			if (packlen) 
+    10d6:	c0dd                	beqz	s1,117c <main+0x304>
+	if( USBFSCTX.USBFS_errata_dont_send_endpoint_in_window || USBFSCTX.USBFS_Endp_Busy[ endp ] ) return -1;
+    10d8:	20001ab7          	lui	s5,0x20001
+	NVIC->IRER[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
+    10dc:	19392223          	sw	s3,388(s2)
+    10e0:	c44a8a93          	addi	s5,s5,-956 # 20000c44 <USBFSCTX>
+    10e4:	128ac783          	lbu	a5,296(s5)
+				ctx->usb_timeout = 0;
+    10e8:	00042623          	sw	zero,12(s0)
+    10ec:	e7d1                	bnez	a5,1178 <main+0x300>
+    10ee:	127ac783          	lbu	a5,295(s5)
+    10f2:	e3d9                	bnez	a5,1178 <main+0x300>
+	if( USBFSCTX.USBFS_SetupReqLen > 0 ) return USBFSCTX.USBFS_SetupReqLen;
+    10f4:	002ad783          	lhu	a5,2(s5)
+    10f8:	e3c1                	bnez	a5,1178 <main+0x300>
+	if( (USBFS->INT_ST & 0x80) ) return -3;
+    10fa:	400237b7          	lui	a5,0x40023
+    10fe:	40078793          	addi	a5,a5,1024 # 40023400 <_eusrstack+0x2001e400>
+    1102:	0077c783          	lbu	a5,7(a5)
+    1106:	07e2                	slli	a5,a5,0x18
+    1108:	87e1                	srai	a5,a5,0x18
+    110a:	0607c763          	bltz	a5,1178 <main+0x300>
+			UEP_DMA( endp ) = (uintptr_t)USBFSCTX.ENDPOINTS[endp];
+    110e:	20001537          	lui	a0,0x20001
+    1112:	d1450693          	addi	a3,a0,-748 # 20000d14 <USBFSCTX+0xd0>
+    1116:	400237b7          	lui	a5,0x40023
+				ret = USBFS_SendEndpointNEW(3, (uint8_t*)(uart_rx_buffer + ctx->rx_pos), packlen, 1);
+    111a:	00cd0593          	addi	a1,s10,12
+    111e:	40d7ae23          	sw	a3,1052(a5) # 4002341c <_eusrstack+0x2001e41c>
+			copyBuffer( USBFSCTX.ENDPOINTS[endp], data, len );
+    1122:	95ba                	add	a1,a1,a4
+    1124:	8626                	mv	a2,s1
+    1126:	d1450513          	addi	a0,a0,-748
+    112a:	39c1                	jal	dfa <memcpy>
+	UEP_CTRL_LEN( endp ) = len;
+    112c:	01049793          	slli	a5,s1,0x10
+    1130:	40023737          	lui	a4,0x40023
+    1134:	83c1                	srli	a5,a5,0x10
+    1136:	42f71623          	sh	a5,1068(a4) # 4002342c <_eusrstack+0x2001e42c>
+	UEP_CTRL_TX( endp ) = ( UEP_CTRL_TX( endp ) & ~USBFS_UEP_T_RES_MASK ) | USBFS_UEP_T_RES_ACK;
+    113a:	87ba                	mv	a5,a4
+    113c:	42e75703          	lhu	a4,1070(a4)
+    1140:	66c1                	lui	a3,0x10
+    1142:	16f1                	addi	a3,a3,-4 # fffc <usbfs_cdc_uart.c.5b8701b2+0xd78b>
+    1144:	8f75                	and	a4,a4,a3
+    1146:	42e79723          	sh	a4,1070(a5)
+	USBFSCTX.USBFS_Endp_Busy[ endp ] = 1;
+    114a:	4785                	li	a5,1
+    114c:	12fa83a3          	sb	a5,295(s5)
+					ctx->rxing = packlen;
+    1150:	0ff4f793          	zext.b	a5,s1
+    1154:	00f40823          	sb	a5,16(s0)
+					ctx->rx_remain -= packlen;
+    1158:	4c1c                	lw	a5,24(s0)
+    115a:	8f85                	sub	a5,a5,s1
+    115c:	cc1c                	sw	a5,24(s0)
+					ctx->rx_pos += packlen;
+    115e:	485c                	lw	a5,20(s0)
+    1160:	97a6                	add	a5,a5,s1
+					if (ctx->rx_pos >= UART_RX_BUF_SIZE) ctx->rx_pos = 0;
+    1162:	00fcf363          	bgeu	s9,a5,1168 <main+0x2f0>
+    1166:	4781                	li	a5,0
+    1168:	c85c                	sw	a5,20(s0)
+					if (packlen == USBFS_PACKET_SIZE) ctx->zero_packet_pending = 1;
+    116a:	04000793          	li	a5,64
+    116e:	00f49563          	bne	s1,a5,1178 <main+0x300>
+    1172:	4785                	li	a5,1
+    1174:	00f40e23          	sb	a5,28(s0)
+	NVIC->IENR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
+    1178:	11392223          	sw	s3,260(s2)
+	if (ctx->zero_packet_pending && ctx->rxing == 0 && ctx->usb_timeout >= UART_ZERO_TIMEOUT) 
+    117c:	01c44783          	lbu	a5,28(s0)
+    1180:	e2078ee3          	beqz	a5,fbc <main+0x144>
+    1184:	01044783          	lbu	a5,16(s0)
+    1188:	e2079ae3          	bnez	a5,fbc <main+0x144>
+    118c:	4458                	lw	a4,12(s0)
+    118e:	03b00793          	li	a5,59
+    1192:	e2e7f5e3          	bgeu	a5,a4,fbc <main+0x144>
+	NVIC->IRER[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
+    1196:	19392223          	sw	s3,388(s2)
+		ctx->rxing = 1;
+    119a:	4785                	li	a5,1
+    119c:	00f40823          	sb	a5,16(s0)
+	if( tx ) UEP_CTRL_TX( endp ) = ( UEP_CTRL_TX( endp ) & ~USBFS_UEP_T_RES_MASK ) | USBFS_UEP_T_RES_ACK;
+    11a0:	400237b7          	lui	a5,0x40023
+    11a4:	42e7d703          	lhu	a4,1070(a5) # 4002342e <_eusrstack+0x2001e42e>
+    11a8:	66c1                	lui	a3,0x10
+    11aa:	16f1                	addi	a3,a3,-4 # fffc <usbfs_cdc_uart.c.5b8701b2+0xd78b>
+		ctx->usb_timeout = 0;
+    11ac:	00042623          	sw	zero,12(s0)
+    11b0:	8f75                	and	a4,a4,a3
+    11b2:	42e79723          	sh	a4,1070(a5)
+		ctx->zero_packet_pending = 0;
+    11b6:	00040e23          	sb	zero,28(s0)
+	NVIC->IENR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
+    11ba:	11392223          	sw	s3,260(s2)
+}
+    11be:	bbfd                	j	fbc <main+0x144>
+			}
+			else
+			{
+				state_led = 0;
+				funDigitalWrite( PA9,     FUN_LOW );
+    11c0:	020007b7          	lui	a5,0x2000
+    11c4:	00fba823          	sw	a5,16(s7)
+				state_led = 0;
+    11c8:	4d81                	li	s11,0
+    11ca:	b535                	j	ff6 <main+0x17e>
+			if (ctx->usb_timeout >= UART_USB_TIMEOUT) 
+    11cc:	4458                	lw	a4,12(s0)
+    11ce:	25700793          	li	a5,599
+    11d2:	fae7f5e3          	bgeu	a5,a4,117c <main+0x304>
+				USBFSCTX.USBFS_Endp_Busy[3] = 0;
+    11d6:	200017b7          	lui	a5,0x20001
+				ctx->rxing = 0;
+    11da:	00040823          	sb	zero,16(s0)
+				USBFSCTX.USBFS_Endp_Busy[3] = 0;
+    11de:	c4478793          	addi	a5,a5,-956 # 20000c44 <USBFSCTX>
+    11e2:	120783a3          	sb	zero,295(a5)
+    11e6:	bf59                	j	117c <main+0x304>
+
+000011e8 <SysTick_Handler>:
+{
+    11e8:	1101                	addi	sp,sp,-32
+    11ea:	c63a                	sw	a4,12(sp)
+	SysTick->CMP += DELAY_MS_TIME;
+    11ec:	e000f737          	lui	a4,0xe000f
+{
+    11f0:	c242                	sw	a6,4(sp)
+	SysTick->CMP += DELAY_MS_TIME;
+    11f2:	01072803          	lw	a6,16(a4) # e000f010 <_eusrstack+0xc000a010>
+{
+    11f6:	c43e                	sw	a5,8(sp)
+	SysTick->CMP += DELAY_MS_TIME;
+    11f8:	67b1                	lui	a5,0xc
+{
+    11fa:	c046                	sw	a7,0(sp)
+	SysTick->CMP += DELAY_MS_TIME;
+    11fc:	b8078793          	addi	a5,a5,-1152 # bb80 <usbfs_cdc_uart.c.5b8701b2+0x930f>
+    1200:	01472883          	lw	a7,20(a4)
+    1204:	97c2                	add	a5,a5,a6
+{
+    1206:	ce2a                	sw	a0,28(sp)
+    1208:	cc2e                	sw	a1,24(sp)
+    120a:	ca32                	sw	a2,20(sp)
+    120c:	c836                	sw	a3,16(sp)
+	SysTick->CMP += DELAY_MS_TIME;
+    120e:	0107b533          	sltu	a0,a5,a6
+    1212:	cb1c                	sw	a5,16(a4)
+    1214:	011506b3          	add	a3,a0,a7
+    1218:	cb54                	sw	a3,20(a4)
+	cdc.rx_timeout++;
+    121a:	200017b7          	lui	a5,0x20001
+	SysTick->SR = 0;
+    121e:	00072223          	sw	zero,4(a4)
+	cdc.rx_timeout++;
+    1222:	c0c78793          	addi	a5,a5,-1012 # 20000c0c <cdc>
+    1226:	5398                	lw	a4,32(a5)
+	millis_cnt++;
+    1228:	c041a803          	lw	a6,-1020(gp) # 20000000 <millis_cnt>
+	cdc.rx_timeout++;
+    122c:	0705                	addi	a4,a4,1
+    122e:	d398                	sw	a4,32(a5)
+	cdc.usb_timeout++;
+    1230:	47d8                	lw	a4,12(a5)
+	millis_cnt++;
+    1232:	c081a883          	lw	a7,-1016(gp) # 20000004 <millis_cnt+0x4>
+    1236:	00180513          	addi	a0,a6,1
+    123a:	01053633          	sltu	a2,a0,a6
+	cdc.usb_timeout++;
+    123e:	0705                	addi	a4,a4,1
+	millis_cnt++;
+    1240:	c0a1a223          	sw	a0,-1020(gp) # 20000000 <millis_cnt>
+	cdc.usb_timeout++;
+    1244:	c7d8                	sw	a4,12(a5)
+	millis_cnt++;
+    1246:	011607b3          	add	a5,a2,a7
+    124a:	c0f1a423          	sw	a5,-1016(gp) # 20000004 <millis_cnt+0x4>
+}
+    124e:	4572                	lw	a0,28(sp)
+    1250:	45e2                	lw	a1,24(sp)
+    1252:	4652                	lw	a2,20(sp)
+    1254:	46c2                	lw	a3,16(sp)
+    1256:	4732                	lw	a4,12(sp)
+    1258:	47a2                	lw	a5,8(sp)
+    125a:	4812                	lw	a6,4(sp)
+    125c:	4882                	lw	a7,0(sp)
+    125e:	6105                	addi	sp,sp,32
+    1260:	30200073          	mret
+
+00001264 <string3>:
+    1264:	00300308 00370030 00000000              ..0.0.7.....
+
+00001270 <string2>:
+    1270:	00550320 00420053 0073002d 00720065      .U.S.B.-.s.e.r.
+    1280:	00610069 0020006c 0069006c 006b006e     i.a.l. .l.i.n.k.
+    1290:	00000000                                ....
+
+00001294 <string1>:
+    1294:	00630310 00330068 00660032 006e0075     ..c.h.3.2.f.u.n.
+    12a4:	00000000                                ....
+
+000012a8 <language>:
+    12a8:	04090304 6c6c6568 000d0a6f 4253555b     ....hello...[USB
+    12b8:	5254205d 46534e41 202c5245 656b6f74     ] TRANSFER, toke
+    12c8:	203d206e 78323025 7065202c 25203d20     n = %02x, ep = %
+    12d8:	62202c64 7165526d 74736575 65707954     d, bmRequestType
+    12e8:	25203d20 2c783230 65526220 73657571      = %02x, bReques
+    12f8:	203d2074 78323025 0000000a 4253555b     t = %02x....[USB
+    1308:	4553205d 3a505554 32302520 30252078     ] SETUP: %02x %0
+    1318:	25207832 20643230 78323025 34302520     2x %02d %02x %04
+    1328:	00000a78 4253555b 4552205d 00544553     x...[USB] RESET.
+    1338:	4253555b 5553205d 4e455053 00000044     [USB] SUSPEND...
+    1348:	4253555b 6e69205d 73676674 203d2074     [USB] intfgst = 
+    1358:	78343025 0000000a 00000ae2 00000a46     %04x........F...
+    1368:	00000912 00000a8a 00000912 000009e6     ................
+    1378:	000009c2 00000912 00000a20 00000a38     ........ ...8...
+    1388:	00000ad6 000009ec                       ........
+
+00001390 <config_descriptor>:
+    1390:	00430209 80000102 00040932 02020100     ..C.....2.......
+    13a0:	24050001 05011000 01000124 02022404     ...$....$....$..
+    13b0:	00062405 81050701 01004003 00010409     .$.......@......
+    13c0:	00000a02 02050700 00004002 02830507     .........@......
+    13d0:	00000040                                @...
+
+000013d4 <device_descriptor>:
+    13d4:	01100112 40000002 d0351209 02010007     .......@..5.....
+    13e4:	00000103                                ....
+
+000013e8 <descriptor_list>:
+    13e8:	00000100 000013d4 00000012 00000200     ................
+    13f8:	00001390 00000043 00000300 000012a8     ....C...........
+    1408:	00000004 04090301 00001294 00000010     ................
+    1418:	04090302 00001270 00000020 04090303     ....p... .......
+    1428:	00001264 00000008                       d.......
