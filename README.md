@@ -17,3 +17,5 @@ Then python script can be used to program:
 ```
 sudo python chprog.py main.bin
 ```
+
+![board](https://github.com/mztulip/CH32X033_examples/blob/main/board_photo2.jpeg)
