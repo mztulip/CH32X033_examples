@@ -19,3 +19,5 @@ sudo python chprog.py main.bin
 ```
 
 ![board](https://github.com/mztulip/CH32X033_examples/blob/main/board_photo2.jpeg)
+
+![board2](https://github.com/mztulip/CH32X033_examples/blob/main/board_photo_1.jpeg)
