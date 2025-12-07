@@ -342,6 +342,12 @@ void write_cdc(const uint8_t* data, size_t len)
 	NVIC_EnableIRQ(USB_IRQn);
 }
 
+int putchar(int c)
+{
+	write_cdc((uint8_t*)&c, 1);
+	return 1;
+}
+
 static int __puts_cdc( char *s, int len, void *buf )
 {
 	(void)buf;//To zawiera wskaźnika na oryginalny string z printf

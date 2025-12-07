@@ -65,16 +65,30 @@ void init_spi(void)
 uint8_t spi_write_read(uint8_t tx_data)
 {
 	//TX empty status data can be send
-	// while((SPI1->STATR & SPI_I2S_FLAG_TXE) == 0) {Delay_Ms( 1 );}
+	uint8_t counter = 0;
+	while((SPI1->STATR & SPI_I2S_FLAG_TXE) == 0 && counter < 100) {Delay_Ms( 1 );counter++;}
+	if(counter >=100)
+	{
+		printf("TX empty not set, timeout reached\n\r");
+		return 0;
+	}
 	SPI1->DATAR = tx_data;
 
-	while((SPI1->STATR & SPI_I2S_FLAG_RXNE) != 0) {Delay_Ms( 1 );printf("rx waiting...\n\r");}
+	counter =0;
+	while((SPI1->STATR & SPI_I2S_FLAG_RXNE) != 0) {Delay_Ms( 1 );counter++;}
+	if(counter >=100)
+	{
+		printf("RX not empty not set, timeout reached\n\r");
+		return 0;
+	}
 	uint16_t rx_data = SPI1->DATAR;
 	return (uint8_t)rx_data;
 }
 
 void flash_read_info()
 {
+	spi_write_read(0);
+
 	flash_cs_low();
 	spi_write_read(0x90);
 	spi_write_read(0);
@@ -139,12 +153,11 @@ int main()
 			}
 
 			// int len = sprintf(print_buffer, "hello\n\r");
-			int len = sprintf(print_buffer, "Before flash read\n\r");
-			// funDigitalWrite( PA9,     FUN_LOW );
-			write_cdc((uint8_t*)print_buffer, len);
+			// int len = sprintf(print_buffer, "Before flash read\n\r");
+			// write_cdc((uint8_t*)print_buffer, len);
 			// printf("Before flash read\n\r");
-			// flash_read_info();
-			printf("Hello dssdfdsf fdfdsfsdf fds fds fsd fsd fs df ");
+			flash_read_info();
+			printf("Hello after read\n\r");
 		}
 
 		
