@@ -144,7 +144,6 @@ int main()
 		if((millis_cnt - last_delay) > 1000)
 		{
 			last_delay = millis_cnt;
-			// GPIO_InverseBits(1);
 			if (state_led == 0)
 			{
 				state_led = 1;
@@ -159,14 +158,14 @@ int main()
 			// int len = sprintf(print_buffer, "hello\n\r");
 			// int len = sprintf(print_buffer, "Before flash read\n\r");
 			// write_cdc((uint8_t*)print_buffer, len);
-			// printf("Before flash read\n\r");
+			printf("Before flash read\n\r");
 			flash_read_info();
 			printf("Hello after read\n\r");
 		}
 
 		
-		// cdc_process_tx(&cdc);
-		// cdc_process_rx(&cdc);
+		cdc_process_tx(&cdc);
+		cdc_process_rx(&cdc);
 	}
 }
 
