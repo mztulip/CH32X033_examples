@@ -18,7 +18,7 @@ void cdc_init(CDC_config_t * ctx)
 	cdc.cdc_cfg[6] = 8;
 	cdc.cdc_cfg[7] = UART_RX_TIMEOUT * 10;
 
-	USBFS->UEP2_DMA = (uintptr_t)uart_tx_buffer;
+	USBFS->UEP2_DMA = (uintptr_t)cdc_tx_buffer;
 }
 
 void cdc_process_rx(CDC_config_t * ctx) 
@@ -116,7 +116,7 @@ void SystemReset_StartMode(uint32_t Mode)
 
 void cdc_process_tx(CDC_config_t * ctx) 
 {
-	//USB po DMA umieszcza dane w buforze uart_tx_buffer
+	//USB po DMA umieszcza dane w buforze cdc_tx_buffer
 	//dane są te odbierane z edpointu 2
 	//tx_remain zawiera ilośc odebranych danych i jest to ustawiane w przerwaniu
 	//i jak są dane odebrane to są dopisywane do bufora i tx_remain aktualizowane
@@ -155,13 +155,13 @@ void cdc_process_tx(CDC_config_t * ctx)
 				ctx->tx_wrap_pos = UART_TX_BUF_SIZE;
 			}
 
-			if(*(uart_tx_buffer + ctx->tx_pos) == 'r')
+			if(*(cdc_tx_buffer + ctx->tx_pos) == 'r')
 			{
 				SystemReset_StartMode(Start_Mode_BOOT);
 				NVIC_SystemReset();
 			}
 
-			// UART_TX_DMA->MADDR = (uint32_t)(uart_tx_buffer + ctx->tx_pos);; // Set address for DMA to read from
+			// UART_TX_DMA->MADDR = (uint32_t)(cdc_tx_buffer + ctx->tx_pos);; // Set address for DMA to read from
 			uint32_t to_send = (ctx->tx_pos + ctx->tx_remain < ctx->tx_wrap_pos)?ctx->tx_remain:(ctx->tx_wrap_pos - ctx->tx_pos);
 			
 			if (to_send == 0) return;
@@ -229,7 +229,7 @@ void HandleDataOut( struct _USBState * ctx, int endp, uint8_t * data, int len )
 			cdc.tx_stop = 0;
 			return;
 		}
-		// printf("uart_tx_buffer: 0=%c, 1=%c, 2=%c, 3=%c\n", uart_tx_buffer[uart.tx_pos], uart_tx_buffer[uart.tx_pos + 1], uart_tx_buffer[uart.tx_pos + 2], uart_tx_buffer[uart.tx_pos + 3]);
+		// printf("cdc_tx_buffer: 0=%c, 1=%c, 2=%c, 3=%c\n", cdc_tx_buffer[uart.tx_pos], cdc_tx_buffer[uart.tx_pos + 1], cdc_tx_buffer[uart.tx_pos + 2], cdc_tx_buffer[uart.tx_pos + 3]);
 		int pad = 4 - USBFS->RX_LEN;
 		if( pad < 0 ) pad = 0;
 		uint32_t write_pos = cdc.tx_pos + cdc.tx_remain + USBFS->RX_LEN;
@@ -247,7 +247,7 @@ void HandleDataOut( struct _USBState * ctx, int endp, uint8_t * data, int len )
 		// if( write_pos < uart.tx_pos && write_pos + 64 >= uart.tx_pos ) goto buffer_overflow;
 		if( write_pos > ( UART_TX_BUF_SIZE - 64) )
 		{
-			// printf("WRAP -> write_pos = %d > 960, 961 = %c\n", write_pos, uart_tx_buffer[961]);
+			// printf("WRAP -> write_pos = %d > 960, 961 = %c\n", write_pos, cdc_tx_buffer[961]);
 			cdc.tx_wrap_pos = cdc.tx_pos + cdc.tx_remain + USBFS->RX_LEN;
 			write_pos = 0;
 		}
@@ -257,12 +257,12 @@ void HandleDataOut( struct _USBState * ctx, int endp, uint8_t * data, int len )
 		//   uart.tx_wrap_pos = write_pos;
 		//   write_pos = 0;
 		// }
-		USBFS->UEP2_DMA = (uint32_t)(uart_tx_buffer + write_pos);
+		USBFS->UEP2_DMA = (uint32_t)(cdc_tx_buffer + write_pos);
 		// printf("USBFS->UEP2_DMA = %08x\n", USBFS->UEP2_DMA);
 		
 		if( cdc.tx_remain >= ( UART_TX_BUF_SIZE ) )
 		{
-			// if( usb_debug ) printf("Buffer overflow, %c\n", uart_tx_buffer[961]);
+			// if( usb_debug ) printf("Buffer overflow, %c\n", cdc_tx_buffer[961]);
 			USBFS_SendNAK( 2, 0 );
 			// USBFS->UEP2_RX_CTRL &= ~USBFS_UEP_R_RES_MASK;
 			// USBFS->UEP2_RX_CTRL |= USBFS_UEP_R_RES_NAK;
@@ -285,8 +285,18 @@ int HandleSetupCustom( struct _USBState * ctx, int setup_code)
 	{
 		switch( setup_code )
 		{
-			case CDC_SET_LINE_CODING:
 			case CDC_SET_LINE_CTLSTE:
+				uint16_t wValue = ctx->USBFS_IndexValue;//pUSBFS_SetupReqPak->wValue;
+				if (wValue&0x01)
+				{
+					cdc.DTR_state = 1;
+				}
+				else
+				{
+					cdc.DTR_state = 0;
+				}
+
+			case CDC_SET_LINE_CODING:
 			case CDC_SEND_BREAK:
 				ret = (ctx->USBFS_SetupReqLen)?ctx->USBFS_SetupReqLen:-1;
 
@@ -347,4 +357,9 @@ int printf( const char* format, ... )
 	int ret_status = mini_vpprintf(__puts_cdc, 0, format, args);
 	va_end( args );
 	return ret_status;
+}
+
+int _write(int fd, const char *buf, int size)
+{
+	return size;
 }

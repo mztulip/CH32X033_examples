@@ -87,6 +87,8 @@ void flash_read_info()
 	printf(" Device ID: 0x%x\n\r", device_id);
 }
 
+char print_buffer[255];
+
 int main()
 {
 	SystemInit();
@@ -98,13 +100,26 @@ int main()
 	USBFSSetup();
 	// init_spi();
 
-	printf("Hello after init\n\r");
-
-	UEP_DMA(2) = (uintptr_t)uart_tx_buffer;
-
 	int last_delay = millis_cnt;
 	funPinMode( PA9,     GPIO_CFGLR_OUT_10Mhz_PP ); // Set PIN_1 to output
 	int state_led = 0;
+	while(cdc.DTR_state == 0)
+	{
+		if((millis_cnt - last_delay) > 100)
+		{
+			last_delay = millis_cnt;
+			if (state_led == 0)
+			{
+				state_led = 1;
+				funDigitalWrite( PA9,     FUN_HIGH );
+			}
+			else
+			{
+				state_led = 0;
+				funDigitalWrite( PA9,     FUN_LOW );
+			}
+		}
+	}
 
 	while(1)
 	{
@@ -122,9 +137,14 @@ int main()
 				state_led = 0;
 				funDigitalWrite( PA9,     FUN_LOW );
 			}
-			printf("Before flash read\n\r");
+
+			// int len = sprintf(print_buffer, "hello\n\r");
+			int len = sprintf(print_buffer, "Before flash read\n\r");
+			// funDigitalWrite( PA9,     FUN_LOW );
+			write_cdc((uint8_t*)print_buffer, len);
+			// printf("Before flash read\n\r");
 			// flash_read_info();
-			// printf("Hello dssdfdsf fdfdsfsdf fds fds fsd fsd fs df ");
+			printf("Hello dssdfdsf fdfdsfsdf fds fds fsd fsd fs df ");
 		}
 
 		

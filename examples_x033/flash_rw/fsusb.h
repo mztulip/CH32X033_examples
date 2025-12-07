@@ -393,7 +393,7 @@ struct _USBState
 	uint8_t  USBFS_DevConfig;
 	uint8_t  USBFS_DevAddr;
 	uint8_t  USBFS_DevSleepStatus;
-	uint8_t  USBFS_DevEnumStatus;
+	volatile uint8_t  USBFS_DevEnumStatus;
 
 	uint8_t* pCtrlPayloadPtr;
 

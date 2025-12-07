@@ -89,20 +89,10 @@ typedef enum {
 #define UART_DEFAULT_PARITY USART_Parity_No
 #define UART_DEFAULT_FLOW USART_HardwareFlowControl_None
 
-__attribute__ ((aligned(4))) uint8_t uart_tx_buffer[UART_TX_BUF_SIZE];
+__attribute__ ((aligned(4))) uint8_t cdc_tx_buffer[UART_TX_BUF_SIZE];
 __attribute__ ((aligned(4))) uint8_t uart_rx_buffer[UART_RX_BUF_SIZE];
 
 typedef struct {
-	uint8_t number;
-	uint32_t baud;
-	uint16_t word_length;
-	uint16_t stop_bits;
-	uint16_t parity;
-	uint16_t flow_control;
-} UART_config_t;
-
-typedef struct {
-	UART_config_t* uart;
 	uint8_t cdc_cfg[8];
 	uint32_t usb_timeout;
 
@@ -119,6 +109,8 @@ typedef struct {
 	uint8_t tx_stop; // Stop incomming data and let UART sent the buffer
 
 	uint8_t error;
+
+	volatile uint8_t DTR_state;
 	
 } CDC_config_t;
 
