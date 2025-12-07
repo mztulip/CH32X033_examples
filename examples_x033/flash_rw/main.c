@@ -30,11 +30,11 @@ void init_spi(void)
 	
 	// Enable GPIO Port C and SPI peripheral
     //Peripheral clock enable register
-    RCC->APB2PCENR |= RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOA | RCC_APB2Periph_SPI1;
+    RCC->APB2PCENR |= RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOA| RCC_APB2Periph_GPIOB | RCC_APB2Periph_SPI1;
     // PC3 - CS
     //CFGLR - Port Configuration register
-    GPIOC->CFGLR &= ~(0xf << (PIN_CS << 2));
-    GPIOC->CFGLR |= (GPIO_CNF_OUT_PP | GPIO_Speed_50MHz) << (PIN_CS << 2);
+    GPIOB->CFGLR &= ~(0xf << (PIN_CS << 2));
+    GPIOB->CFGLR |= (GPIO_CNF_OUT_PP | GPIO_Speed_50MHz) << (PIN_CS << 2);
 
     // PA6 - MISO
     GPIOA->CFGLR &= ~(0xf << (PIN_MISO << 2));
@@ -52,7 +52,7 @@ void init_spi(void)
     SPI1->CTLR1 = SPI_CPHA_1Edge             // Bit 0     - Clock PHAse, data sampling starts from first clock edge
                   | SPI_CPOL_Low            // Bit 1     - Clock POLarity - idles at the logical low voltage
                   | SPI_Mode_Master          // Bit 2     - Master device
-                  | SPI_BaudRatePrescaler_2  // Bit 3-5   - F_HCLK / 2
+                  | SPI_BaudRatePrescaler_2  // Bit 3-5   - F_HCLK / 2 = 48MHz/2=24MHz, I do not know why, but it only works with this prescaler
                   | SPI_FirstBit_MSB         // Bit 7     - MSB transmitted first
                   | SPI_NSS_Soft             // Bit 9     - Software slave management
                   | SPI_DataSize_8b          // Bit 11    - 8-bit data
@@ -87,7 +87,7 @@ uint8_t spi_write_read(uint8_t tx_data)
 
 void flash_read_info()
 {
-	spi_write_read(0);
+	// spi_write_read(0);
 
 	flash_cs_low();
 	spi_write_read(0x90);
@@ -99,6 +99,10 @@ void flash_read_info()
 	flash_cs_high();
 	printf("Manuf ID: 0x%x", manuf_id);
 	printf(" Device ID: 0x%x\n\r", device_id);
+	if(manuf_id == 0xef && device_id == 0x16)
+	{
+		printf("W25Q64FV 64Mbit(8MB)\n\r");
+	}
 }
 
 char print_buffer[255];
@@ -112,7 +116,7 @@ int main()
 	RCC->AHBPCENR = RCC_AHBPeriph_SRAM | RCC_AHBPeriph_DMA1;
 	cdc_init(&cdc);
 	USBFSSetup();
-	// init_spi();
+	init_spi();
 
 	int last_delay = millis_cnt;
 	funPinMode( PA9,     GPIO_CFGLR_OUT_10Mhz_PP ); // Set PIN_1 to output
@@ -161,8 +165,8 @@ int main()
 		}
 
 		
-		cdc_process_tx(&cdc);
-		cdc_process_rx(&cdc);
+		// cdc_process_tx(&cdc);
+		// cdc_process_rx(&cdc);
 	}
 }
 

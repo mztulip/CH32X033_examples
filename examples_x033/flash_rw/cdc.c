@@ -329,17 +329,24 @@ void write_cdc(const uint8_t* data, size_t len)
 	// dokładamy tylko do maks napełnienia bufora,
 	//
 	//potem danych nie dodajemy. Jak całośc zostanie wysłana to bufor leci od początku
-	NVIC_DisableIRQ(USB_IRQn);
-	if((len+cdc.rx_remain) < UART_RX_BUF_SIZE)
+	// NVIC_DisableIRQ(USB_IRQn);
+	// if((len+cdc.rx_remain) < UART_RX_BUF_SIZE)
+	// {
+		
+	// 	uint8_t *buf_empty_part = (uint8_t*)(uart_rx_buffer + cdc.rx_pos+cdc.rx_remain);
+	// 	cdc.rx_remain += len;
+	// 	cdc.rx_timeout = 0;
+	// 	memcpy(buf_empty_part, data, len);
+		
+	// }
+	// NVIC_EnableIRQ(USB_IRQn);
+	// NVIC_DisableIRQ(USB_IRQn);
+	// if(cdc.DTR_state != 0)
 	{
-		
-		uint8_t *buf_empty_part = (uint8_t*)(uart_rx_buffer + cdc.rx_pos+cdc.rx_remain);
-		cdc.rx_remain += len;
-		cdc.rx_timeout = 0;
-		memcpy(buf_empty_part, data, len);
-		
+		while(USBFS_SendEndpointNEW(3, (uint8_t*)data, len, 1) == -1); 
 	}
-	NVIC_EnableIRQ(USB_IRQn);
+	
+	// NVIC_EnableIRQ(USB_IRQn);
 }
 
 int putchar(int c)
